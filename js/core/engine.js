@@ -1,70 +1,197 @@
-// =============================================
+// ======================================
 // CALEPINAGE PRO
-// ENGINE V1
-// =============================================
+// ENGINE.JS
+// Moteur principal du logiciel
+// ======================================
+
 
 class Engine {
 
+
     constructor(canvasId) {
 
+
+        // Canvas principal
         this.canvas = document.getElementById(canvasId);
+
+        if (!this.canvas) {
+
+            console.error(
+                "Canvas introuvable : " + canvasId
+            );
+
+            return;
+
+        }
+
+
         this.ctx = this.canvas.getContext("2d");
 
+
+        // Dimensions
         this.width = 0;
         this.height = 0;
 
-        this.camera = new Camera();
 
-        this.mouse = {
-            x: 0,
-            y: 0,
-            worldX: 0,
-            worldY: 0,
-            left: false,
-            middle: false,
-            right: false
-        };
+        // Modules
+        this.camera = null;
+        this.mouse = null;
+        this.objectManager = null;
 
-        this.objects = [];
 
+        // Etat moteur
         this.running = false;
-        
-        this.objectManager = new ObjectManager();
+        this.lastTime = 0;
+
+
+        console.log(
+            "⚙️ Engine créé"
+        );
 
     }
+
+
+
+    // ==============================
+    // Redimensionnement Canvas
+    // ==============================
 
     resize() {
 
-        this.width = this.canvas.parentElement.clientWidth;
-        this.height = this.canvas.parentElement.clientHeight;
+
+        this.width =
+            this.canvas.parentElement.clientWidth;
+
+
+        this.height =
+            this.canvas.parentElement.clientHeight;
+
 
         this.canvas.width = this.width;
+
         this.canvas.height = this.height;
 
+
     }
+
+
+
+    // ==============================
+    // Démarrage moteur
+    // ==============================
 
     start() {
 
-        this.mouse = new Mouse(this);
-        
-        this.running = true;
 
         this.resize();
 
-        window.addEventListener("resize", () => this.resize());
+
+        window.addEventListener(
+            "resize",
+            () => {
+
+                this.resize();
+
+            }
+        );
+
+
+        this.running = true;
+
 
         this.loop();
 
+
+        console.log(
+            "🚀 Engine démarré"
+        );
+
     }
 
-    loop() {
+
+
+    // ==============================
+    // Boucle principale
+    // ==============================
+
+    loop(time = 0) {
+
 
         if (!this.running) return;
 
-        Renderer.draw(this);
 
-        requestAnimationFrame(() => this.loop());
+
+        const deltaTime =
+            time - this.lastTime;
+
+
+        this.lastTime = time;
+
+
+
+        this.update(deltaTime);
+
+
+        this.render();
+
+
+
+        requestAnimationFrame(
+            (t) => this.loop(t)
+        );
+
 
     }
+
+
+
+    // ==============================
+    // Mise à jour logique
+    // ==============================
+
+    update(deltaTime) {
+
+
+        // Ici viendront :
+        // - outils
+        // - déplacements objets
+        // - animations
+        // - calculs
+
+
+    }
+
+
+
+    // ==============================
+    // Affichage
+    // ==============================
+
+    render() {
+
+
+        Renderer.draw(this);
+
+
+    }
+
+
+
+    // ==============================
+    // Arrêt moteur
+    // ==============================
+
+    stop() {
+
+
+        this.running = false;
+
+
+        console.log(
+            "⛔ Engine arrêté"
+        );
+
+    }
+
 
 }
