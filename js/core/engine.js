@@ -169,9 +169,14 @@ class Engine {
 
     render() {
 
+    const ctx = this.ctx;
 
-        Renderer.draw(this);
+    ctx.fillStyle = "#2b3036";
+    ctx.fillRect(0, 0, this.width, this.height);
 
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "20px Arial";
+    ctx.fillText("CALEPINAGE PRO OK", 50, 50);
 
     }
 
