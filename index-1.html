@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calepinage Pro</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <!-- ========================= -->
+    <!-- Barre supérieure -->
+    <!-- ========================= -->
+
+    <header class="topbar">
+
+        <div class="logo">
+            <h1>CALEPINAGE PRO</h1>
+        </div>
+
+        <nav class="menu">
+
+            <button id="newProject">Nouveau</button>
+            <button id="openProject">Ouvrir</button>
+            <button id="saveProject">Sauvegarder</button>
+
+            <div class="separator"></div>
+
+            <button id="undo">Annuler</button>
+            <button id="redo">Rétablir</button>
+
+            <div class="separator"></div>
+
+            <button id="zoomIn">+</button>
+            <button id="zoomOut">-</button>
+
+        </nav>
+
+    </header>
+
+    <!-- ========================= -->
+    <!-- Zone principale -->
+    <!-- ========================= -->
+
+    <div class="container">
+
+        <!-- Outils -->
+
+        <aside class="leftPanel">
+
+            <h2>OUTILS</h2>
+
+            <button data-tool="select">🖱 Sélection</button>
+            <button data-tool="facade">⬛ Façade</button>
+            <button data-tool="door">🚪 Porte</button>
+            <button data-tool="window">🪟 Fenêtre</button>
+            <button data-tool="dimension">📏 Cotation</button>
+            <button data-tool="move">✋ Déplacer</button>
+            <button data-tool="delete">🗑 Supprimer</button>
+
+        </aside>
+
+        <!-- Canvas -->
+
+        <main class="workspace">
+
+            <canvas id="canvas"></canvas>
+
+        </main>
+
+        <!-- Propriétés -->
+
+        <aside class="rightPanel">
+
+            <h2>PROPRIÉTÉS</h2>
+
+            <div id="propertyPanel">
+
+                <p>Aucun objet sélectionné.</p>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Barre d'état -->
+    <!-- ========================= -->
+
+    <footer class="statusBar">
+
+        <div>X : <span id="mouseX">0</span></div>
+        <div>Y : <span id="mouseY">0</span></div>
+        <div>Zoom : <span id="zoomLevel">100%</span></div>
+        <div>Grille : <span id="gridSize">500 mm</span></div>
+        <div>Accrochage : Activé</div>
+
+    </footer>
+
+    <!-- ========================= -->
+    <!-- Scripts -->
+    <!-- ========================= -->
+
+    <script src="js/core/camera.js"></script>
+    <script src="js/core/grid.js"></script>
+    <script src="js/core/objectManager.js"></script>
+    <script src="js/core/renderer.js"></script>
+    <script src="js/core/engine.js"></script>
+
+    <script src="js/editor/mouse.js"></script>
+    <script src="js/editor/touch.js"></script>
+    <script src="js/editor/tools.js"></script>
+    <script src="js/editor/selection.js"></script>
+    <script src="js/editor/facadeTools.js"></script>
+
+    <script src="js/objects/facade.js"></script>
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
