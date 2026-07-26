@@ -37,6 +37,8 @@ else {
     engine.mouse = new Mouse(engine);
 
 }
+    
+    engine.selection = new Selection(engine);
 
 
     // Outil façade
