@@ -1,18 +1,30 @@
 class Renderer {
 
-    static draw(engine) {
+    static draw(engine){
 
-        const ctx = engine.ctx;
+    const ctx = engine.ctx;
 
-        ctx.clearRect(
-            0,
-            0,
-            engine.width,
-            engine.height
-        );
+    ctx.clearRect(
+        0,
+        0,
+        engine.width,
+        engine.height
+    );
 
-        Grid.draw(engine);
+    ctx.save();
 
-    }
+    ctx.translate(
+        engine.camera.x,
+        engine.camera.y
+    );
+
+    ctx.scale(
+        engine.camera.zoom,
+        engine.camera.zoom
+    );
+
+    Grid.draw(engine);
+
+    ctx.restore();
 
 }
