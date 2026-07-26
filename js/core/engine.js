@@ -43,6 +43,8 @@ class Engine {
 
     start() {
 
+        this.mouse = new Mouse(this);
+        
         this.running = true;
 
         this.resize();
