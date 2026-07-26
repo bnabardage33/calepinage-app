@@ -101,5 +101,8 @@ class Facade {
         );
 
     }
+    generatePanels() {
+
+           CalepinageGenerator.generate(this);
 
 }
