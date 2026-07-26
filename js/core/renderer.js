@@ -1,7 +1,9 @@
 class Renderer {
 
-    static draw(engine){
-
+    static draw(engine);
+    
+    engine.objectManager.draw(engine);
+    
     const ctx = engine.ctx;
 
     ctx.clearRect(
