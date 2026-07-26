@@ -13,11 +13,7 @@ class Engine {
         this.width = 0;
         this.height = 0;
 
-        this.camera = {
-            x: 0,
-            y: 0,
-            zoom: 1
-        };
+        this.camera = new Camera();
 
         this.mouse = {
             x: 0,
