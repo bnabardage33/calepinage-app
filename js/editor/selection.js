@@ -143,6 +143,14 @@ class Selection {
         if(found){
 
             found.selected = true;
+            
+        if (this.engine.propertyPanel) {
+
+             this.engine.propertyPanel.update();
+            
+             this.selected = found;
+
+            }
 
             console.log(
                 "Objet sélectionné :",
