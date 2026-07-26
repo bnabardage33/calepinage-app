@@ -1,86 +1,162 @@
+// ======================================
+// CALEPINAGE PRO
+// MOUSE.JS
+// Gestion souris PC
+// ======================================
+
+
 class Mouse {
+
 
     constructor(engine){
 
         this.engine = engine;
 
-        this.drag = false;
+        this.canvas = engine.canvas;
+
+        this.dragging = false;
 
         this.lastX = 0;
         this.lastY = 0;
+
 
         this.init();
 
     }
 
+
+
     init(){
 
-        const canvas = this.engine.canvas;
 
-        canvas.addEventListener("mousedown",(e)=>{
+        // Déplacement avec clic molette
 
-            if(e.button===1){
+        this.canvas.addEventListener(
+            "mousedown",
+            (e)=>{
 
-                this.drag=true;
 
-                this.lastX=e.clientX;
-                this.lastY=e.clientY;
+                if(e.button === 1){
 
-            }
+                    this.dragging = true;
 
-        });
 
-        window.addEventListener("mouseup",()=>{
+                    this.lastX = e.clientX;
+                    this.lastY = e.clientY;
 
-            this.drag=false;
 
-        });
+                }
 
-        canvas.addEventListener("mousemove",(e)=>{
-
-            if(!this.drag) return;
-
-            this.engine.camera.x +=
-                e.clientX-this.lastX;
-
-            this.engine.camera.y +=
-                e.clientY-this.lastY;
-
-            this.lastX=e.clientX;
-            this.lastY=e.clientY;
-
-        });
-
-        canvas.addEventListener("wheel",(e)=>{
-
-            e.preventDefault();
-
-            if(e.deltaY<0){
-
-                this.engine.camera.zoom*=1.10;
-
-            }else{
-
-                this.engine.camera.zoom*=0.90;
 
             }
+        );
 
-            this.engine.camera.zoom=Math.max(
 
-                this.engine.camera.minZoom,
 
-                Math.min(
+        window.addEventListener(
+            "mouseup",
+            ()=>{
 
-                    this.engine.camera.maxZoom,
+                this.dragging = false;
 
-                    this.engine.camera.zoom
+            }
+        );
 
-                )
 
-            );
 
-        });
+        // Déplacement caméra
+
+        this.canvas.addEventListener(
+            "mousemove",
+            (e)=>{
+
+
+                if(!this.dragging) return;
+
+
+
+                const dx =
+                e.clientX - this.lastX;
+
+
+                const dy =
+                e.clientY - this.lastY;
+
+
+
+                this.engine.camera.move(
+                    dx,
+                    dy
+                );
+
+
+
+                this.lastX = e.clientX;
+                this.lastY = e.clientY;
+
+
+            }
+        );
+
+
+
+        // Zoom souris
+
+        this.canvas.addEventListener(
+            "wheel",
+            (e)=>{
+
+
+                e.preventDefault();
+
+
+
+                const rect =
+                this.canvas.getBoundingClientRect();
+
+
+
+                const x =
+                e.clientX - rect.left;
+
+
+                const y =
+                e.clientY - rect.top;
+
+
+
+                if(e.deltaY < 0){
+
+
+                    this.engine.camera.zoomAt(
+                        x,
+                        y,
+                        1.10
+                    );
+
+
+                }
+                else{
+
+
+                    this.engine.camera.zoomAt(
+                        x,
+                        y,
+                        0.90
+                    );
+
+
+                }
+
+
+            },
+            {
+                passive:false
+            }
+        );
+
 
     }
+
 
 }
