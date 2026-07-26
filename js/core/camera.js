@@ -1,44 +1,158 @@
 // ======================================
 // CALEPINAGE PRO
-// CAMERA
+// CAMERA.JS
+// Gestion de la vue chantier
 // ======================================
+
 
 class Camera {
 
-    constructor() {
 
+    constructor(){
+
+
+        // Position écran
         this.x = 0;
         this.y = 0;
 
+
+        // Niveau de zoom
         this.zoom = 1;
 
-        this.minZoom = 0.20;
-        this.maxZoom = 10;
+
+        // Limites
+        this.minZoom = 0.05;
+        this.maxZoom = 20;
+
 
     }
 
-    screenToWorld(x, y) {
+
+
+    // ==============================
+    // Écran -> monde réel
+    // ==============================
+
+    screenToWorld(screenX, screenY){
+
 
         return {
 
-            x: (x - this.x) / this.zoom,
+            x:
+            (screenX - this.x)
+            /
+            this.zoom,
 
-            y: (y - this.y) / this.zoom
+
+            y:
+            (screenY - this.y)
+            /
+            this.zoom
 
         };
 
+
     }
 
-    worldToScreen(x, y) {
+
+
+    // ==============================
+    // Monde -> écran
+    // ==============================
+
+    worldToScreen(worldX, worldY){
+
 
         return {
 
-            x: x * this.zoom + this.x,
+            x:
+            worldX * this.zoom
+            +
+            this.x,
 
-            y: y * this.zoom + this.y
+
+            y:
+            worldY * this.zoom
+            +
+            this.y
 
         };
 
+
     }
+
+
+
+    // ==============================
+    // Déplacement
+    // ==============================
+
+    move(dx,dy){
+
+
+        this.x += dx;
+
+        this.y += dy;
+
+
+    }
+
+
+
+    // ==============================
+    // Zoom intelligent
+    // ==============================
+
+    zoomAt(mouseX, mouseY, factor){
+
+
+
+        const before =
+        this.screenToWorld(
+            mouseX,
+            mouseY
+        );
+
+
+
+        this.zoom *= factor;
+
+
+
+        this.zoom =
+        Math.max(
+            this.minZoom,
+            Math.min(
+                this.maxZoom,
+                this.zoom
+            )
+        );
+
+
+
+        const after =
+        this.screenToWorld(
+            mouseX,
+            mouseY
+        );
+
+
+
+        this.x +=
+        (after.x - before.x)
+        *
+        this.zoom;
+
+
+
+        this.y +=
+        (after.y - before.y)
+        *
+        this.zoom;
+
+
+
+    }
+
 
 }
