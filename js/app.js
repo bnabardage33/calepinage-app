@@ -27,7 +27,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
     // Gestion souris
-    engine.mouse = new Mouse(engine);
+    engine.touch = new Touch(engine);
 
 
     // Outil façade
