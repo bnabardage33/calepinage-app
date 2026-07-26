@@ -4,52 +4,47 @@
 // Point d'entrée du logiciel
 // ======================================
 
-
 let engine = null;
-
 
 window.addEventListener("DOMContentLoaded", () => {
 
-
     console.log("🚀 Démarrage Calepinage Pro");
 
-
-    // Création du moteur principal
+    // Création du moteur
     engine = new Engine("canvas");
 
-
-    // Initialisation caméra
+    // Modules principaux
     engine.camera = new Camera();
-
-
-    // Gestionnaire des objets
     engine.objectManager = new ObjectManager();
 
+    // Gestion des entrées
+    if ("ontouchstart" in window && typeof Touch !== "undefined") {
 
-    // Gestion souris
-    if ("ontouchstart" in window) {
+        engine.touch = new Touch(engine);
 
-    engine.touch = new Touch(engine);
+    } else if (typeof Mouse !== "undefined") {
 
-}
-else {
+        engine.mouse = new Mouse(engine);
 
-    engine.mouse = new Mouse(engine);
+    }
 
-}
-    
-    engine.selection = new Selection(engine);
+    // Sélection
+    if (typeof Selection !== "undefined") {
 
+        engine.selection = new Selection(engine);
+
+    }
 
     // Outil façade
-    engine.facadeTool = new FacadeTool(engine);
+    if (typeof FacadeTool !== "undefined") {
 
+        engine.facadeTool = new FacadeTool(engine);
 
-    // Démarrage moteur
+    }
+
+    // Démarrage
     engine.start();
 
-
     console.log("✅ Calepinage Pro prêt");
-
 
 });
