@@ -1,19 +1,32 @@
-// ======================================
-// CALEPINAGE PRO
-// APP.JS
-// Point d'entrée du logiciel
-// ======================================
-
-let engine;
+let engine = null;
 
 window.addEventListener("DOMContentLoaded", () => {
 
-    engine = new Engine("canvas");
+    try {
 
-    engine.camera = new Camera();
+        console.log("1");
 
-    engine.objectManager = new ObjectManager();
+        engine = new Engine("canvas");
 
-    engine.start();
+        console.log("2");
+
+        engine.camera = new Camera();
+
+        console.log("3");
+
+        engine.objectManager = new ObjectManager();
+
+        console.log("4");
+
+        engine.start();
+
+        console.log("5");
+
+    } catch (e) {
+
+        alert(e.message);
+        console.error(e);
+
+    }
 
 });
