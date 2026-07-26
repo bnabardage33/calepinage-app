@@ -28,6 +28,8 @@ class Engine {
         this.objects = [];
 
         this.running = false;
+        
+        this.objectManager = new ObjectManager();
 
     }
 
