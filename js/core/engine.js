@@ -171,12 +171,14 @@ class Engine {
 
     const ctx = this.ctx;
 
+    ctx.clearRect(0, 0, this.width, this.height);
+
     ctx.fillStyle = "#2b3036";
     ctx.fillRect(0, 0, this.width, this.height);
 
     ctx.fillStyle = "#ffffff";
     ctx.font = "20px Arial";
-    ctx.fillText("CALEPINAGE PRO OK", 50, 50);
+    ctx.fillText("ENGINE OK", 20, 40);
 
     }
 
