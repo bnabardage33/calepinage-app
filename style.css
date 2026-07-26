@@ -147,6 +147,34 @@ canvas{
     border-radius:8px;
 }
 
+.property-panel{
+
+    width:300px;
+
+    background:#252a30;
+
+    color:white;
+
+    padding:20px;
+
+    border-left:1px solid #444;
+
+    overflow:auto;
+
+}
+
+.property-panel h3{
+
+    margin-top:0;
+
+}
+
+.property-panel p{
+
+    margin:8px 0;
+
+}
+
 /* ===========================
    BARRE BAS
 =========================== */
