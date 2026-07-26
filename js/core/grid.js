@@ -1,164 +1,64 @@
 // ======================================
 // CALEPINAGE PRO
 // GRID.JS
-// Grille de travail CAO
+// Version simple V1
 // ======================================
-
 
 class Grid {
 
-
     static draw(engine) {
 
-
         const ctx = engine.ctx;
-
         const camera = engine.camera;
 
+        const gridSize = 50;
 
-        // Taille réelle de la grille
-        // 500 mm = 0,5 mètre
-        let baseSize = 500;
-
-
-        // Adaptation au zoom
-        let size = baseSize * camera.zoom;
-
-
-
-        // Si trop serré, on augmente
-        while(size < 25){
-
-            baseSize *= 2;
-
-            size = baseSize * camera.zoom;
-
-        }
-
-
-
-        // Si trop espacé, on réduit
-        while(size > 150){
-
-            baseSize /= 2;
-
-            size = baseSize * camera.zoom;
-
-        }
-
-
-
-        // Couleur grille
-        ctx.strokeStyle = "#3a4148";
+        ctx.strokeStyle = "#3f454d";
         ctx.lineWidth = 1 / camera.zoom;
 
+        const startX = Math.floor((-camera.x / camera.zoom) / gridSize) * gridSize;
+        const startY = Math.floor((-camera.y / camera.zoom) / gridSize) * gridSize;
 
+        const endX = startX + engine.width / camera.zoom + gridSize;
+        const endY = startY + engine.height / camera.zoom + gridSize;
 
-        // Position départ
-        const startX =
-            (-camera.x / camera.zoom)
-            % baseSize;
-
-
-        const startY =
-            (-camera.y / camera.zoom)
-            % baseSize;
-
-
-
-        // ==========================
-        // Petites lignes
-        // ==========================
-
-        for(
-            let x = startX;
-            x < engine.width / camera.zoom;
-            x += baseSize
-        ){
-
+        // Lignes verticales
+        for (let x = startX; x <= endX; x += gridSize) {
 
             ctx.beginPath();
-
-            ctx.moveTo(x, -camera.y / camera.zoom);
-
-            ctx.lineTo(
-                x,
-                (-camera.y / camera.zoom)
-                +
-                engine.height / camera.zoom
-            );
-
+            ctx.moveTo(x, startY);
+            ctx.lineTo(x, endY);
             ctx.stroke();
-
 
         }
 
-
-
-        for(
-            let y = startY;
-            y < engine.height / camera.zoom;
-            y += baseSize
-        ){
-
+        // Lignes horizontales
+        for (let y = startY; y <= endY; y += gridSize) {
 
             ctx.beginPath();
-
-            ctx.moveTo(-camera.x / camera.zoom,y);
-
-            ctx.lineTo(
-                (-camera.x / camera.zoom)
-                +
-                engine.width / camera.zoom,
-                y
-            );
-
+            ctx.moveTo(startX, y);
+            ctx.lineTo(endX, y);
             ctx.stroke();
-
 
         }
 
-
-
-        // ==========================
-        // Axes principaux
-        // ==========================
-
-
-        ctx.lineWidth =
-            2 / camera.zoom;
-
-
-
-        // Axe vertical X=0
-
-        ctx.strokeStyle="#e05a5a";
+        // Axe X
+        ctx.strokeStyle = "#00ff00";
+        ctx.lineWidth = 2 / camera.zoom;
 
         ctx.beginPath();
-
-        ctx.moveTo(0,-100000);
-
-        ctx.lineTo(0,100000);
-
+        ctx.moveTo(startX, 0);
+        ctx.lineTo(endX, 0);
         ctx.stroke();
 
-
-
-        // Axe horizontal Y=0
-
-        ctx.strokeStyle="#5ae07a";
+        // Axe Y
+        ctx.strokeStyle = "#ff0000";
 
         ctx.beginPath();
-
-        ctx.moveTo(-100000,0);
-
-        ctx.lineTo(100000,0);
-
+        ctx.moveTo(0, startY);
+        ctx.lineTo(0, endY);
         ctx.stroke();
-
-
 
     }
-
 
 }
