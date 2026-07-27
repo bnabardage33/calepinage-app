@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calepinage Pro</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <!-- ========================= -->
+    <!-- Barre supérieure -->
+    <!-- ========================= -->
+
+    <header class="topbar">
+
+        <div class="logo">
+            <h1>CALEPINAGE PRO</h1>
+        </div>
+
+        <nav class="menu">
+
+            <button id="newProject">Nouveau</button>
+            <button id="openProject">Ouvrir</button>
+            <button id="saveProject">Sauvegarder</button>
+
+            <div class="separator"></div>
+
+            <button id="undo">Annuler</button>
+            <button id="redo">Rétablir</button>
+
+            <div class="separator"></div>
+
+            <button id="zoomIn">+</button>
+            <button id="zoomOut">-</button>
+
+        </nav>
+
+    </header>
+
+    <!-- ========================= -->
+    <!-- Zone principale -->
+    <!-- ========================= -->
+
+    <div class="container">
+
+        <!-- Outils -->
+
+        <aside class="leftPanel">
+
+            <h2>OUTILS</h2>
+
+            <button data-tool="select">🖱 Sélection</button>
+            <button data-tool="facade">⬛ Façade</button>
+            <button data-tool="door">🚪 Porte</button>
+            <button data-tool="window">🪟 Fenêtre</button>
+            <button data-tool="dimension">📏 Cotation</button>
+            <button data-tool="move">✋ Déplacer</button>
+            <button data-tool="delete">🗑 Supprimer</button>
+
+        </aside>
+
+        <!-- Canvas -->
+
+        <main class="workspace">
+
+            <canvas id="canvas"></canvas>
+
+        </main>
+
+        <!-- Propriétés -->
+
+        <aside class="rightPanel">
+
+            <h2>PROPRIÉTÉS</h2>
+
+            <div id="propertyPanel">
+
+                <p>Aucun objet sélectionné.</p>
+
+            </div>
+
+            <!-- ========================= -->
+            <!-- Création de façade (formulaire fixe, plus de modal) -->
+            <!-- ========================= -->
+
+            <h2>NOUVELLE FAÇADE</h2>
+
+            <form id="facadeForm" class="inlineForm">
+
+                <label for="facadeName">Nom de la façade</label>
+                <input type="text" id="facadeName" name="facadeName" placeholder="Ex : Pignon Nord" required>
+
+                <div class="fieldRow">
+
+                    <div class="fieldCol">
+                        <label for="facadeWidth">Largeur (mm)</label>
+                        <input type="number" id="facadeWidth" name="facadeWidth" min="1" step="1" inputmode="numeric" required>
+                    </div>
+
+                    <div class="fieldCol">
+                        <label for="facadeHeight">Hauteur (mm)</label>
+                        <input type="number" id="facadeHeight" name="facadeHeight" min="1" step="1" inputmode="numeric" required>
+                    </div>
+
+                </div>
+
+                <label for="facadeCladding">Type de bardage</label>
+                <select id="facadeCladding" name="facadeCladding">
+                    <option value="Bac acier">Bac acier</option>
+                    <option value="Panneau composite">Panneau composite</option>
+                    <option value="Bois">Bois</option>
+                    <option value="Fibrociment">Fibrociment</option>
+                    <option value="Autre">Autre</option>
+                </select>
+
+                <label for="facadeOrientation">Sens de pose</label>
+                <select id="facadeOrientation" name="facadeOrientation">
+                    <option value="Vertical">Vertical</option>
+                    <option value="Horizontal">Horizontal</option>
+                </select>
+
+                <p id="facadeFormError" class="formError" hidden></p>
+
+                <button type="submit" class="primaryAction fullWidth">Créer la façade</button>
+
+            </form>
+
+        </aside>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Barre d'état -->
+    <!-- ========================= -->
+
+    <footer class="statusBar">
+
+        <div>X : <span id="mouseX">0</span></div>
+        <div>Y : <span id="mouseY">0</span></div>
+        <div>Zoom : <span id="zoomLevel">100%</span></div>
+        <div>Grille : <span id="gridSize">500 mm</span></div>
+        <div>Accrochage : Activé</div>
+
+    </footer>
+
+    <!-- ========================= -->
+    <!-- Scripts -->
+    <!-- ========================= -->
+
+    <script src="js/core/camera.js"></script>
+    <script src="js/core/grid.js"></script>
+    <script src="js/core/objectManager.js"></script>
+    <script src="js/core/renderer.js"></script>
+    <script src="js/core/engine.js"></script>
+
+    <script src="js/editor/mouse.js"></script>
+    <script src="js/editor/touch.js"></script>
+    <script src="js/editor/tools.js"></script>
+    <script src="js/editor/selection.js"></script>
+    <script src="js/editor/facadeTools.js"></script>
+    <script src="js/editor/facadeFormV2.js"></script>
+
+    <script src="js/objects/facade.js"></script>
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
