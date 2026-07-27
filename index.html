@@ -4,69 +4,85 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Calepinage Pro</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="style.css">
+    <title>Calepinage Pro V2</title>
+
+    <link rel="stylesheet" href="css/style.css">
 
 </head>
 
 <body>
 
     <!-- ========================= -->
-    <!-- Barre supérieure -->
+    <!-- HEADER -->
     <!-- ========================= -->
 
     <header class="topbar">
 
         <div class="logo">
+
             <h1>CALEPINAGE PRO</h1>
+
         </div>
 
         <nav class="menu">
 
-            <button id="newProject">Nouveau</button>
-            <button id="openProject">Ouvrir</button>
-            <button id="saveProject">Sauvegarder</button>
+            <button id="newProjectBtn">
+                Nouveau
+            </button>
 
-            <div class="separator"></div>
+            <button id="openProjectBtn">
+                Ouvrir
+            </button>
 
-            <button id="undo">Annuler</button>
-            <button id="redo">Rétablir</button>
+            <button id="saveProjectBtn">
+                Sauvegarder
+            </button>
 
-            <div class="separator"></div>
+            <span class="separator"></span>
 
-            <button id="zoomIn">+</button>
-            <button id="zoomOut">-</button>
+            <button id="newFacadeBtn" class="primary">
+                + Nouvelle façade
+            </button>
 
         </nav>
 
     </header>
 
     <!-- ========================= -->
-    <!-- Zone principale -->
+    <!-- CONTENU -->
     <!-- ========================= -->
 
     <div class="container">
 
-        <!-- Outils -->
+        <!-- Barre de gauche -->
 
-        <aside class="leftPanel">
+        <aside class="sidebar">
 
-            <h2>OUTILS</h2>
+            <h2>Projet</h2>
 
-            <button data-tool="select">🖱 Sélection</button>
-            <button data-tool="facade">⬛ Façade</button>
-            <button data-tool="door">🚪 Porte</button>
-            <button data-tool="window">🪟 Fenêtre</button>
-            <button data-tool="dimension">📏 Cotation</button>
-            <button data-tool="move">✋ Déplacer</button>
-            <button data-tool="delete">🗑 Supprimer</button>
+            <button id="projectInfoBtn">
+                Informations
+            </button>
+
+            <button id="facadesBtn">
+                Façades
+            </button>
+
+            <button id="metrageBtn">
+                Métré
+            </button>
+
+            <button id="exportBtn">
+                Export
+            </button>
 
         </aside>
 
-        <!-- Canvas -->
+        <!-- Zone de travail -->
 
         <main class="workspace">
 
@@ -76,98 +92,145 @@
 
         <!-- Propriétés -->
 
-        <aside class="rightPanel">
+        <aside class="properties">
 
-            <h2>PROPRIÉTÉS</h2>
+            <h2>Propriétés</h2>
 
-            <div id="propertyPanel">
+            <div id="propertyContent">
 
-                <p>Aucun objet sélectionné.</p>
+                Aucun élément sélectionné.
 
             </div>
-
-            <!-- ========================= -->
-            <!-- Création de façade (formulaire fixe, plus de modal) -->
-            <!-- ========================= -->
-
-            <h2>NOUVELLE FAÇADE</h2>
-
-            <form id="facadeForm" class="inlineForm">
-
-                <label for="facadeName">Nom de la façade</label>
-                <input type="text" id="facadeName" name="facadeName" placeholder="Ex : Pignon Nord" required>
-
-                <div class="fieldRow">
-
-                    <div class="fieldCol">
-                        <label for="facadeWidth">Largeur (mm)</label>
-                        <input type="number" id="facadeWidth" name="facadeWidth" min="1" step="1" inputmode="numeric" required>
-                    </div>
-
-                    <div class="fieldCol">
-                        <label for="facadeHeight">Hauteur (mm)</label>
-                        <input type="number" id="facadeHeight" name="facadeHeight" min="1" step="1" inputmode="numeric" required>
-                    </div>
-
-                </div>
-
-                <label for="facadeCladding">Type de bardage</label>
-                <select id="facadeCladding" name="facadeCladding">
-                    <option value="Bac acier">Bac acier</option>
-                    <option value="Panneau composite">Panneau composite</option>
-                    <option value="Bois">Bois</option>
-                    <option value="Fibrociment">Fibrociment</option>
-                    <option value="Autre">Autre</option>
-                </select>
-
-                <label for="facadeOrientation">Sens de pose</label>
-                <select id="facadeOrientation" name="facadeOrientation">
-                    <option value="Vertical">Vertical</option>
-                    <option value="Horizontal">Horizontal</option>
-                </select>
-
-                <p id="facadeFormError" class="formError" hidden></p>
-
-                <button type="submit" class="primaryAction fullWidth">Créer la façade</button>
-
-            </form>
 
         </aside>
 
     </div>
 
     <!-- ========================= -->
-    <!-- Barre d'état -->
+    <!-- BARRE D'ÉTAT -->
     <!-- ========================= -->
 
-    <footer class="statusBar">
+    <footer class="statusbar">
 
-        <div>X : <span id="mouseX">0</span></div>
-        <div>Y : <span id="mouseY">0</span></div>
-        <div>Zoom : <span id="zoomLevel">100%</span></div>
-        <div>Grille : <span id="gridSize">500 mm</span></div>
-        <div>Accrochage : Activé</div>
+        <span id="statusText">
+
+            Prêt.
+
+        </span>
 
     </footer>
 
     <!-- ========================= -->
-    <!-- Scripts -->
+    <!-- MODAL NOUVELLE FAÇADE -->
     <!-- ========================= -->
 
-    <script src="js/core/camera.js"></script>
-    <script src="js/core/grid.js"></script>
-    <script src="js/core/objectManager.js"></script>
-    <script src="js/core/renderer.js"></script>
-    <script src="js/core/engine.js"></script>
+    <div id="facadeModal" class="modal" hidden>
 
-    <script src="js/editor/mouse.js"></script>
-    <script src="js/editor/touch.js"></script>
-    <script src="js/editor/tools.js"></script>
-    <script src="js/editor/selection.js"></script>
-    <script src="js/editor/facadeTools.js"></script>
-    <script src="js/editor/facadeFormV2.js"></script>
+        <div class="modal-content">
 
-    <script src="js/objects/facade.js"></script>
+            <h2>Nouvelle façade</h2>
+
+            <form id="facadeForm">
+
+                <label>Nom</label>
+
+                <input
+                    id="facadeName"
+                    type="text"
+                    required>
+
+                <label>Largeur (mm)</label>
+
+                <input
+                    id="facadeWidth"
+                    type="number"
+                    required>
+
+                <label>Hauteur (mm)</label>
+
+                <input
+                    id="facadeHeight"
+                    type="number"
+                    required>
+
+                <label>Type</label>
+
+                <select id="facadeType">
+
+                    <option>Bac acier</option>
+
+                    <option>Panneau sandwich</option>
+
+                    <option>Composite</option>
+
+                </select>
+
+                <label>Pose</label>
+
+                <select id="facadePose">
+
+                    <option>Verticale</option>
+
+                    <option>Horizontale</option>
+
+                </select>
+
+                <div class="actions">
+
+                    <button
+                        type="button"
+                        id="cancelFacade">
+
+                        Annuler
+
+                    </button>
+
+                    <button
+                        type="submit">
+
+                        Créer
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- SCRIPTS -->
+    <!-- ========================= -->
+
+    <script src="js/core/state.js"></script>
+
+    <script src="js/core/storage.js"></script>
+
+    <script src="js/canvas/camera.js"></script>
+
+    <script src="js/canvas/grille.js"></script>
+
+    <script src="js/canvas/canvas.js"></script>
+
+    <script src="js/facade/facade.js"></script>
+
+    <script src="js/facade/ouverture.js"></script>
+
+    <script src="js/calcul/calcul.js"></script>
+
+    <script src="js/calcul/metrage.js"></script>
+
+    <script src="js/export/pdf.js"></script>
+
+    <script src="js/export/csv.js"></script>
+
+    <script src="js/ui/dashboard.js"></script>
+
+    <script src="js/ui/modal.js"></script>
+
+    <script src="js/ui/notifications.js"></script>
 
     <script src="js/app.js"></script>
 
