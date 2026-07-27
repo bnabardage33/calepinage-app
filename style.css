@@ -1,72 +1,95 @@
-/* =====================================
-   CALEPINAGE PRO
+/* ==========================================
+   CALEPINAGE PRO V2
    STYLE.CSS
-===================================== */
+========================================== */
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Segoe UI,Arial,sans-serif;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
 html,
 body{
+
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#20252b;
+
+    background:#20262d;
+
     color:#ffffff;
+
 }
 
-/* =====================================
-   BARRE DU HAUT
-===================================== */
+/* ==========================
+   HEADER
+========================== */
 
 .topbar{
+
     height:60px;
-    background:#2c3138;
-    border-bottom:1px solid #3f454d;
+
+    background:#2b3138;
+
+    border-bottom:1px solid #3d454d;
 
     display:flex;
-    justify-content:space-between;
+
     align-items:center;
 
+    justify-content:space-between;
+
     padding:0 20px;
+
 }
 
 .logo h1{
-    color:#4fa8ff;
+
+    color:#43a5ff;
+
     font-size:22px;
+
 }
 
 .menu{
+
     display:flex;
-    align-items:center;
+
     gap:10px;
+
+    align-items:center;
+
 }
 
 .menu button{
 
-    padding:8px 14px;
+    padding:10px 16px;
 
     border:none;
 
-    border-radius:6px;
+    border-radius:8px;
 
-    background:#3b424b;
+    background:#404854;
 
     color:white;
 
     cursor:pointer;
 
-    transition:0.2s;
+    transition:.2s;
 
 }
 
 .menu button:hover{
 
-    background:#4fa8ff;
+    background:#43a5ff;
+
+}
+
+.primary{
+
+    background:#2d8cff !important;
 
 }
 
@@ -76,13 +99,13 @@ body{
 
     height:28px;
 
-    background:#555;
+    background:#666;
 
 }
 
-/* =====================================
+/* ==========================
    CONTENU
-===================================== */
+========================== */
 
 .container{
 
@@ -92,65 +115,59 @@ body{
 
 }
 
-/* =====================================
-   PANNEAU OUTILS
-===================================== */
+/* ==========================
+   MENU GAUCHE
+========================== */
 
-.leftPanel{
+.sidebar{
 
-    width:220px;
+    width:240px;
 
-    background:#262b31;
+    background:#2b3138;
 
-    border-right:1px solid #3f454d;
+    border-right:1px solid #444;
 
-    padding:15px;
-
-    overflow:auto;
+    padding:20px;
 
 }
 
-.leftPanel h2{
+.sidebar h2{
 
-    margin-bottom:15px;
+    color:#43a5ff;
 
-    color:#4fa8ff;
+    margin-bottom:20px;
 
 }
 
-.leftPanel button{
+.sidebar button{
 
     width:100%;
 
-    margin-bottom:10px;
-
     padding:12px;
 
-    background:#363d46;
-
-    color:white;
+    margin-bottom:10px;
 
     border:none;
 
-    border-radius:6px;
+    border-radius:8px;
+
+    background:#404854;
+
+    color:white;
 
     cursor:pointer;
 
-    text-align:left;
+}
 
-    transition:0.2s;
+.sidebar button:hover{
+
+    background:#43a5ff;
 
 }
 
-.leftPanel button:hover{
-
-    background:#4fa8ff;
-
-}
-
-/* =====================================
-   ZONE DE DESSIN
-===================================== */
+/* ==========================
+   CANVAS
+========================== */
 
 .workspace{
 
@@ -160,282 +177,223 @@ body{
 
     overflow:hidden;
 
-    background:#2b3036;
+    background:#272d33;
 
 }
 
 #canvas{
 
-    display:block;
-
     width:100%;
 
     height:100%;
 
-    min-width:100%;
-
-    min-height:100%;
-
-    background:#2b3036;
-
-    cursor:crosshair;
+    display:block;
 
 }
 
-/* =====================================
-   PROPRIÉTÉS
-===================================== */
+/* ==========================
+   PANNEAU DROIT
+========================== */
 
-.rightPanel{
+.properties{
 
-    width:280px;
+    width:300px;
 
-    background:#262b31;
+    background:#2b3138;
 
-    border-left:1px solid #3f454d;
+    border-left:1px solid #444;
+
+    padding:20px;
+
+}
+
+.properties h2{
+
+    color:#43a5ff;
+
+    margin-bottom:20px;
+
+}
+
+#propertyContent{
+
+    background:#3b424d;
+
+    border-radius:10px;
 
     padding:15px;
 
-    overflow:auto;
-
 }
 
-.rightPanel h2{
+/* ==========================
+   FOOTER
+========================== */
 
-    margin-bottom:15px;
-
-    color:#4fa8ff;
-
-}
-
-#propertyPanel{
-
-    background:#363d46;
-
-    padding:12px;
-
-    border-radius:8px;
-
-    min-height:120px;
-
-}
-
-/* =====================================
-   BARRE D'ÉTAT
-===================================== */
-
-.statusBar{
+.statusbar{
 
     height:40px;
 
-    background:#2c3138;
+    background:#2b3138;
 
-    border-top:1px solid #3f454d;
+    border-top:1px solid #444;
 
     display:flex;
 
     align-items:center;
 
-    gap:25px;
-
-    padding:0 15px;
-
-    font-size:14px;
+    padding:0 20px;
 
 }
 
-/* =====================================
-   SCROLLBAR
-===================================== */
+/* ==========================
+   MODAL
+========================== */
 
-::-webkit-scrollbar{
+.modal{
 
-    width:8px;
+    position:fixed;
 
-}
+    inset:0;
 
-::-webkit-scrollbar-thumb{
+    display:none;
 
-    background:#4fa8ff;
+    justify-content:center;
 
-    border-radius:4px;
+    align-items:center;
 
-}
+    background:rgba(0,0,0,.65);
 
-::-webkit-scrollbar-track{
-
-    background:#2b3036;
+    z-index:999;
 
 }
 
-/* =====================================
-   VERSION MOBILE
-===================================== */
+.modal.open{
 
-@media (max-width:900px){
-
-    .leftPanel{
-
-        display:none;
-
-    }
-
-    .container{
-
-        flex-direction:column;
-
-        height:auto;
-
-        min-height:calc(100vh - 100px);
-
-    }
-
-    .workspace{
-
-        min-height:50vh;
-
-    }
-
-    .rightPanel{
-
-        width:100%;
-
-        box-sizing:border-box;
-
-    }
+    display:flex;
 
 }
 
-/* =====================================
-   FORMULAIRE FAÇADE (INLINE, TOUJOURS VISIBLE)
-===================================== */
+.modal-content{
 
-.rightPanel h2{
+    width:420px;
 
-    color:#4fa8ff;
+    max-width:95%;
 
-    font-size:16px;
+    background:#2d343c;
 
-    margin:20px 0 12px;
+    border-radius:12px;
 
-}
-
-.rightPanel h2:first-of-type{
-
-    margin-top:0;
+    padding:25px;
 
 }
 
-.inlineForm label{
+.modal-content h2{
+
+    margin-bottom:20px;
+
+    color:#43a5ff;
+
+}
+
+.modal-content label{
 
     display:block;
 
-    margin:12px 0 6px;
+    margin-top:15px;
 
-    font-size:13px;
-
-    color:#c9ced4;
+    margin-bottom:5px;
 
 }
 
-.inlineForm input,
-.inlineForm select{
+.modal-content input,
+.modal-content select{
 
     width:100%;
 
     padding:10px;
 
-    border-radius:6px;
+    border:none;
 
-    border:1px solid #3f454d;
+    border-radius:8px;
 
-    background:#1c2025;
+    background:#424b57;
 
-    color:#ffffff;
-
-    font-size:16px;
-
-    /* 16px minimum : évite le zoom automatique iOS au focus */
-
-    box-sizing:border-box;
+    color:white;
 
 }
 
-.inlineForm input:focus,
-.inlineForm select:focus{
-
-    outline:none;
-
-    border-color:#4fa8ff;
-
-}
-
-.inlineForm .fieldRow{
+.actions{
 
     display:flex;
 
+    justify-content:flex-end;
+
     gap:10px;
 
-}
-
-.inlineForm .fieldCol{
-
-    flex:1;
-
-    min-width:0;
+    margin-top:25px;
 
 }
 
-.formError{
+.actions button{
 
-    margin-top:12px;
-
-    padding:10px 12px;
-
-    background:rgba(255,80,80,0.15);
-
-    border:1px solid #ff5050;
-
-    border-radius:6px;
-
-    color:#ff8080;
-
-    font-size:13px;
-
-}
-
-.primaryAction{
-
-    padding:10px 16px;
+    padding:10px 18px;
 
     border:none;
 
-    border-radius:6px;
-
-    background:#4fa8ff;
-
-    color:#0d1117;
-
-    font-weight:600;
+    border-radius:8px;
 
     cursor:pointer;
 
-    transition:0.2s;
+}
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media(max-width:900px){
+
+.sidebar{
+
+    display:none;
 
 }
 
-.primaryAction:hover{
+.properties{
 
-    background:#7cc0ff;
+    display:none;
 
 }
 
-.primaryAction.fullWidth{
+.topbar{
 
-    width:100%;
+    flex-direction:column;
 
-    margin-top:16px;
+    height:auto;
 
-    padding:12px;
+    padding:10px;
+
+}
+
+.menu{
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    margin-top:10px;
+
+}
+
+.logo h1{
+
+    font-size:18px;
+
+}
+
+.container{
+
+    height:calc(100vh - 140px);
+
+}
 
 }
