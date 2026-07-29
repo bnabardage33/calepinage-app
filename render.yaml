@@ -9,10 +9,6 @@ services:
       - key: PYTHON_VERSION
         value: 3.11.9
       - key: DATABASE_PATH
-        value: /var/data/calepinage.db
+        value: ./calepinage.db
       - key: METEO_API_KEY
         sync: false
-    disk:
-      name: calepinage-data
-      mountPath: /var/data
-      sizeGB: 1
