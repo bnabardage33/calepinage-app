@@ -14,6 +14,6 @@ class Client(Base):
     adresse = Column(String)
     date_creation = Column(DateTime, default=datetime.utcnow)
 
-    # Relation avec Chantier
-    # dans app/models/client.py
-    chantiers = relationship("app.models.chantier.Chantier", back_populates="client")
+    # SOLUTION ANTI-BOUCLE :
+    # On utilise une fonction lambda pour dire à SQLAlchemy "va chercher la classe plus tard"
+    chantiers = relationship(lambda: app.models.chantier.Chantier, back_populates="client")
