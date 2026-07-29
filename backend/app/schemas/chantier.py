@@ -1,78 +1,61 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-
-from app.database import get_db
-from app import models
-from app.schemas.chantier import (
-    ClientCreate, ClientOut, ChantierCreate, ChantierOut, FacadeCreate, FacadeOut
-)
-
-router = APIRouter(prefix="/api", tags=["chantier"])
+from datetime import datetime
+from typing import Optional
+from pydantic import BaseModel, ConfigDict
 
 
-# ---- Client ----
-
-@router.post("/clients", response_model=ClientOut)
-def create_client(payload: ClientCreate, db: Session = Depends(get_db)):
-    client = models.Client(**payload.model_dump())
-    db.add(client)
-    db.commit()
-    db.refresh(client)
-    return client
+class ClientBase(BaseModel):
+    nom: str
+    societe: Optional[str] = None
+    telephone: Optional[str] = None
+    email: Optional[str] = None
+    adresse: Optional[str] = None
 
 
-@router.get("/clients", response_model=list[ClientOut])
-def list_clients(db: Session = Depends(get_db)):
-    return db.query(models.Client).all()
+class ClientCreate(ClientBase):
+    pass
 
 
-@router.get("/clients/{client_id}", response_model=ClientOut)
-def get_client(client_id: int, db: Session = Depends(get_db)):
-    client = db.get(models.Client, client_id)
-    if not client:
-        raise HTTPException(status_code=404, detail="Client introuvable")
-    return client
+class ClientOut(ClientBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    date_creation: datetime
 
 
-# ---- Chantier ----
-
-@router.post("/chantiers", response_model=ChantierOut)
-def create_chantier(payload: ChantierCreate, db: Session = Depends(get_db)):
-    if not db.get(models.Client, payload.client_id):
-        raise HTTPException(status_code=404, detail="Client introuvable")
-    chantier = models.Chantier(**payload.model_dump())
-    db.add(chantier)
-    db.commit()
-    db.refresh(chantier)
-    return chantier
+class ChantierBase(BaseModel):
+    numero_unique: str
+    client_id: int
+    adresse_chantier: str
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    statut: str = "en_cours"
+    notes: Optional[str] = None
 
 
-@router.get("/chantiers", response_model=list[ChantierOut])
-def list_chantiers(db: Session = Depends(get_db)):
-    return db.query(models.Chantier).all()
+class ChantierCreate(ChantierBase):
+    pass
 
 
-@router.get("/chantiers/{chantier_id}", response_model=ChantierOut)
-def get_chantier(chantier_id: int, db: Session = Depends(get_db)):
-    chantier = db.get(models.Chantier, chantier_id)
-    if not chantier:
-        raise HTTPException(status_code=404, detail="Chantier introuvable")
-    return chantier
+class ChantierOut(ChantierBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    date_creation: datetime
 
 
-# ---- Façade ----
-
-@router.post("/facades", response_model=FacadeOut)
-def create_facade(payload: FacadeCreate, db: Session = Depends(get_db)):
-    if not db.get(models.Chantier, payload.chantier_id):
-        raise HTTPException(status_code=404, detail="Chantier introuvable")
-    facade = models.Facade(**payload.model_dump())
-    db.add(facade)
-    db.commit()
-    db.refresh(facade)
-    return facade
+class FacadeBase(BaseModel):
+    chantier_id: int
+    nom: str
+    type_forme: str = "rectangle"
+    largeur: float
+    hauteur: float
+    larg_hg: Optional[float] = None
+    larg_hd: Optional[float] = None
+    orientation: Optional[str] = None
 
 
-@router.get("/chantiers/{chantier_id}/facades", response_model=list[FacadeOut])
-def list_facades(chantier_id: int, db: Session = Depends(get_db)):
-    return db.query(models.Facade).filter(models.Facade.chantier_id == chantier_id).all()
+class FacadeCreate(FacadeBase):
+    pass
+
+
+class FacadeOut(FacadeBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
