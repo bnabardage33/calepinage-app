@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: calepinage-backend
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r backend/requirements.txt"
+    startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DATABASE_PATH
+        value: /var/data/calepinage.db
+    disk:
+      name: calepinage-data
+      mountPath: /var/data
+      sizeGB: 1
