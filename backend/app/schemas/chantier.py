@@ -50,6 +50,7 @@ class FacadeBase(BaseModel):
     larg_hg: Optional[float] = None
     larg_hd: Optional[float] = None
     orientation: Optional[str] = None
+    type_bardage: Optional[str] = None
 
 
 class FacadeCreate(FacadeBase):
