@@ -10,6 +10,8 @@ services:
         value: 3.11.9
       - key: DATABASE_PATH
         value: /var/data/calepinage.db
+      - key: METEO_API_KEY
+        sync: false
     disk:
       name: calepinage-data
       mountPath: /var/data
