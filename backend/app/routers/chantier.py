@@ -6,6 +6,8 @@ from app import models
 from app.schemas.chantier import (
     ClientCreate, ClientOut, ChantierCreate, ChantierOut, FacadeCreate, FacadeOut
 )
+from app.schemas.metre import MetreCalculRequest, MetreCalculOut
+from app.services.calcul_metre import calcul_metre_facade, REGLES_BARDAGE
 
 router = APIRouter(prefix="/api", tags=["chantier"])
 
@@ -76,3 +78,31 @@ def create_facade(payload: FacadeCreate, db: Session = Depends(get_db)):
 @router.get("/chantiers/{chantier_id}/facades", response_model=list[FacadeOut])
 def list_facades(chantier_id: int, db: Session = Depends(get_db)):
     return db.query(models.Facade).filter(models.Facade.chantier_id == chantier_id).all()
+
+
+# ---- Calcul métré ----
+
+@router.post("/facades/{facade_id}/metre", response_model=MetreCalculOut)
+def calculer_metre(
+    facade_id: int, payload: MetreCalculRequest, db: Session = Depends(get_db)
+):
+    facade = db.get(models.Facade, facade_id)
+    if not facade:
+        raise HTTPException(status_code=404, detail="Façade introuvable")
+    if not facade.type_bardage:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "type_bardage non renseigné sur cette façade. "
+                f"Valeurs possibles : {list(REGLES_BARDAGE)}"
+            ),
+        )
+    try:
+        return calcul_metre_facade(
+            largeur=facade.largeur,
+            hauteur=facade.hauteur,
+            type_bardage=facade.type_bardage,
+            marge_chute_pourcentage=payload.marge_chute_pourcentage,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
