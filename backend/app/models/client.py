@@ -15,4 +15,5 @@ class Client(Base):
     date_creation = Column(DateTime, default=datetime.utcnow)
 
     # Relation avec Chantier
-    chantiers = relationship("Chantier", back_populates="client")
+    # dans app/models/client.py
+    chantiers = relationship("app.models.chantier.Chantier", back_populates="client")
