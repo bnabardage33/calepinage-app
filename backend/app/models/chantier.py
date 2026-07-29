@@ -1,3 +1,7 @@
+from sqlalchemy import Column, Integer, Float, String, ForeignKey, CheckConstraint
+from sqlalchemy.orm import relationship
+from app.database import Base  # Ajustez ce chemin si votre Base est définie ailleurs (ex: ..database)
+
 class Facade(Base):
     __tablename__ = "facade"
 
@@ -27,3 +31,4 @@ class Facade(Base):
     chantier = relationship("Chantier", back_populates="facades")
     panneaux = relationship("PanneauPose", back_populates="facade", cascade="all, delete-orphan")
     metres = relationship("Metre", back_populates="facade", cascade="all, delete-orphan")
+    
