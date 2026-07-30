@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'https://calepinage-app-2gmc.onrender.com/api',
 })
 
 export const getChantiers = () => api.get('/chantiers').then((r) => r.data)
