@@ -1,6 +1,6 @@
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
@@ -33,12 +33,17 @@ def health():
 
 
 @app.get("/api/debug-db")
-def debug_db():
+def debug_db(key: str = Query(...)):
     """
-    Route de diagnostic TEMPORAIRE — à supprimer une fois le problème résolu.
+    Route de diagnostic — protégée par DEBUG_KEY.
     Révèle quel moteur de base de données est réellement utilisé par le
     backend en ce moment (sqlite ou postgresql), et si DATABASE_URL est vue.
+    Accès : /api/debug-db?key=<DEBUG_KEY>
     """
+    debug_key = os.environ.get("DEBUG_KEY")
+    if not debug_key or key != debug_key:
+        raise HTTPException(status_code=404, detail="Not Found")
+
     database_url_env = os.environ.get("DATABASE_URL")
 
     return {
