@@ -64,3 +64,9 @@ class DocumentPdf(Base):
     )
 
     chantier = relationship("Chantier", back_populates="documents")
+
+# Dans Intervention :
+    meteo_prevue = Column(Text)  # JSON stocké
+
+# Dans Avancement :
+    meteo_reelle = Column(Text)  # JSON stocké
