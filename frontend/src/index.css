@@ -52,15 +52,15 @@ body {
   font-size: 0.95rem;
 }
 
-/* PANNEAU SIDEBAR COULISSANT MODERNE (AJUSTÉ) */
+/* PANNEAU SIDEBAR COULISSANT - STYLE PRO BTP */
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
-  width: 90%;               /* Élargi d'un quart (passé de 80% à 90% pour être plus large) */
-  max-width: 340px;         /* Augmenté pour s'adapter à la nouvelle largeur */
-  height: 55vh;             /* Réduit de moitié en hauteur (occupe environ 55% de l'écran) */
-  margin: 12px;             /* Conserve l'effet flottant détaché des bords */
+  width: 85vw;              /* Utilise 85% de la largeur totale de l'écran pour un impact fort */
+  max-width: 360px;         /* Augmenté pour donner un vrai volume au logo et aux textes */
+  height: calc(100vh - 32px); /* Hauteur optimisée : occupe presque tout l'écran mais garde une marge propre en haut et en bas */
+  margin: 16px;             /* Marge légèrement augmentée pour accentuer l'effet de carte détachée */
   background: var(--anthracite-btp);
   color: white;
   display: flex;
@@ -69,9 +69,9 @@ body {
   transform: translateX(-120%);
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 30;
-  border-radius: 16px;      /* Coins arrondis préservés */
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-  overflow: hidden;         /* Force le contenu et le scroll à respecter les coins */
+  border-radius: 20px;      /* Coins arrondis légèrement plus prononcés pour suivre l'agrandissement */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
 }
 
 .sidebar.ouvert {
