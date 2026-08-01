@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { getChantier, getFacades, calculerMetre } from '../api/client'
 import FacadeForm from '../components/FacadeForm'
 import MetreResult from '../components/MetreResult'
+import MeteoWidget from '../components/MeteoWidget'
 
 export default function ChantierDetail() {
   const { id } = useParams()
@@ -32,6 +33,15 @@ export default function ChantierDetail() {
       <h1>{chantier.numero_unique}</h1>
       <p>{chantier.adresse_chantier}</p>
       <p>Statut : {chantier.statut}</p>
+      <div className="chantier-meteo">
+    <h3>🌤️ Météo chantier</h3>
+    <MeteoWidget
+      chantierId={chantier.id}
+      lat={chantier.latitude}
+      lon={chantier.longitude}
+    />
+  </div>
+)}
 
       <h2>Façades</h2>
       <ul className="liste-facades">
