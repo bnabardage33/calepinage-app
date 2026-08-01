@@ -42,7 +42,9 @@ class Chantier(Base):
     interventions = relationship("Intervention", back_populates="chantier", cascade="all, delete-orphan")
     avancements = relationship("Avancement", back_populates="chantier", cascade="all, delete-orphan")
     documents = relationship("DocumentPdf", back_populates="chantier", cascade="all, delete-orphan")
-
+ # Dans la classe Chantier, déjà présent :
+    latitude = Column(Float)
+    longitude = Column(Float)
 
 class Facade(Base):
     __tablename__ = "facade"
