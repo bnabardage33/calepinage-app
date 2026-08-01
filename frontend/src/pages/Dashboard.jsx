@@ -115,7 +115,7 @@ export default function Dashboard() {
       <div className="card">
   <div className="card-header">
     <h3>🌤️ Météo du jour</h3>
-    <Link to="/planning">Détail →</Link>
+    <Link to="/meteo">Détail →</Link>
   </div>
   <MeteoWidget
     lat={44.8378}  // Exemple Bordeaux
