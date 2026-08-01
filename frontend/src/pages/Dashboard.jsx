@@ -1,6 +1,7 @@
 // Dashboard.jsx — version augmentée
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import MeteoWidget from '../components/MeteoWidget'
 import { getChantiers, getClients } from '../api/client'
 
 export default function Dashboard() {
@@ -111,6 +112,17 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <div className="card">
+  <div className="card-header">
+    <h3>🌤️ Météo du jour</h3>
+    <Link to="/planning">Détail →</Link>
+  </div>
+  <MeteoWidget
+    lat={44.8378}  // Exemple Bordeaux
+    lon={-0.5792}
+    compact={true}
+  />
+</div>
 
       {/* Accès rapide */}
       <div className="quick-access">
