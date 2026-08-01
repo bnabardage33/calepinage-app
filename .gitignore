@@ -8,6 +8,7 @@ venv/
 .venv/
 *.db
 *.sqlite3
+*.sqlite
 
 # Node
 node_modules/
@@ -29,3 +30,5 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
+backend/.env
+frontend/.env
