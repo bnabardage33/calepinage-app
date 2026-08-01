@@ -25,33 +25,35 @@ body {
 }
 
 /* ==========================================================================
-   TOPBAR FIXE ÉLARGIE (CONTIENT LE GRAND LOGO)
+   TOPBAR ULTRA-FORCÉE (AGRANDIE POUR VOTRE VÉRITABLE LOGO)
    ========================================================================== */
+header,
 header.topbar,
-.topbar {
+.topbar,
+div.app-shell > header {
   display: flex !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: 1.5rem !important;
+  gap: 2rem !important;
   background: var(--anthracite-btp) !important;
   color: white !important;
-  padding: 0 1.25rem !important;
+  padding: 0 1.5rem !important;
   position: sticky !important;
   top: 0 !important;
-  z-index: 40 !important;
+  z-index: 99999 !important; /* Reste absolument au-dessus de tout */
   
-  /* Hauteur de la barre supérieure pour laisser respirer le logo */
-  height: 120px !important; 
-  min-height: 120px !important;
-  max-height: 120px !important;
-  border-bottom: 4px solid var(--rouge-logo) !important;
+  /* On force l'élargissement de la barre à 140px pour un grand logo */
+  height: 140px !important; 
+  min-height: 140px !important;
+  max-height: 140px !important;
+  border-bottom: 5px solid var(--rouge-logo) !important;
 }
 
 .bouton-menu {
   background: transparent !important;
   border: none !important;
   color: white !important;
-  font-size: 1.8rem !important;
+  font-size: 2.2rem !important; /* Plus grand pour s'aligner sur la nouvelle hauteur */
   padding: 0.5rem !important;
   cursor: pointer !important;
   display: flex !important;
@@ -62,38 +64,40 @@ header.topbar,
 
 .bouton-menu:hover {
   background: var(--anthracite-survol) !important;
-  border-radius: 6px !important;
+  border-radius: 8px !important;
 }
 
-/* Encart blanc dans la barre du haut pour le logo */
+/* Grand encart blanc fixe sur l'écran principal pour valoriser votre logo */
 .topbar-logo-conteneur {
   background-color: #ffffff !important;
-  padding: 8px 16px !important;
-  border-radius: 6px !important;
+  padding: 8px 20px !important;
+  border-radius: 8px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  height: 90px !important; /* Hauteur généreuse pour un logo bien visible */
+  height: 105px !important; /* Hauteur très généreuse pour le logo */
   width: auto !important;
 }
 
 .topbar-logo-img {
   height: 100% !important;
   width: auto !important;
+  max-height: 95px !important;
   object-fit: contain !important;
 }
 
 /* ==========================================================================
-   PANNEAU SIDEBAR COULISSANT EN CONTINU SOUS LA BARRE DU HAUT
+   MENU COULISSANT PARFAITEMENT ACCOUPLÉ À LA TOPBAR
    ========================================================================== */
 .sidebar {
   position: fixed !important;
-  top: 120px !important; /* S'aligne parfaitement sous les 120px de la topbar */
+  top: 140px !important; /* Collé au pixel près sous les 140px de la barre fixe */
   left: 0 !important;
   width: 90vw !important;
   max-width: 380px !important;
-  height: 72vh !important; /* Hauteur entre-deux conservée */
-  margin: 16px !important; /* Effet de carte flottante */
+  height: calc(100vh - 140px - 24px) !important; /* Hauteur dynamique ajustée pour flotter proprement */
+  margin: 12px !important;
+  margin-top: 0 !important; /* On supprime la marge du haut pour fusionner avec la ligne rouge */
   background: var(--anthracite-btp) !important;
   color: white !important;
   display: flex !important;
@@ -101,9 +105,9 @@ header.topbar,
   padding: 0 !important;
   transform: translateX(-120%) !important;
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  z-index: 30 !important;
-  border-radius: 20px !important;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4) !important;
+  z-index: 99990 !important;
+  border-radius: 0 0 20px 20px !important; /* Arrondi uniquement en bas pour s'accoupler parfaitement en haut */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3) !important;
   overflow: hidden !important;
 }
 
@@ -111,18 +115,18 @@ header.topbar,
   transform: translateX(0) !important;
 }
 
-/* ARRIÈRE-PLAN ASSOMBRI AVEC FLOU */
+/* ARRIÈRE-PLAN ASSOMBRI */
 .sidebar-overlay {
   position: fixed !important;
   inset: 0 !important;
-  top: 120px !important; /* Laisse le bandeau supérieur et le logo accessibles */
+  top: 140px !important; /* Laisse la barre supérieure accessible au clic pour fermer */
   background: rgba(13, 13, 13, 0.5) !important;
   backdrop-filter: blur(4px) !important;
-  z-index: 25 !important;
+  z-index: 99980 !important;
 }
 
 /* ==========================================================================
-   NAVIGATION INTERNE (SANS LOGO INTERNE)
+   NAVIGATION INTERNE
    ========================================================================== */
 .sidebar-nav {
   display: flex !important;
@@ -134,7 +138,7 @@ header.topbar,
 
 .nav-liens-scroll {
   flex: 1 !important;
-  padding: 0.75rem !important;
+  padding: 1rem 0.75rem !important;
   overflow-y: auto !important;
   display: flex !important;
   flex-direction: column !important;
@@ -145,11 +149,11 @@ header.topbar,
   display: flex !important;
   align-items: center !important;
   gap: 0.75rem !important;
-  padding: 0.7rem 0.85rem !important;
+  padding: 0.75rem 0.85rem !important;
   border-radius: 8px !important;
   color: var(--gris-metallise) !important;
   text-decoration: none !important;
-  font-size: 0.92rem !important;
+  font-size: 0.95rem !important;
   font-weight: 500 !important;
   transition: background 0.15s ease, color 0.15s ease !important;
 }
@@ -167,17 +171,17 @@ header.topbar,
 }
 
 .nav-icone {
-  font-size: 1.1rem !important;
-  width: 1.4rem !important;
+  font-size: 1.15rem !important;
+  width: 1.5rem !important;
   text-align: center !important;
 }
 
 .sidebar-separateur {
-  font-size: 0.72rem !important;
+  font-size: 0.75rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.08em !important;
   color: #798291 !important;
-  padding: 1.25rem 0.85rem 0.4rem !important;
+  padding: 1.5rem 0.85rem 0.4rem !important;
   font-weight: 700 !important;
 }
 
@@ -193,11 +197,12 @@ header.topbar,
 }
 
 /* ==========================================================================
-   ZONE DE CONTENU DE L'APPLICATION
+   ZONE DE CONTENU DE L'APPLICATION (DÉCALÉE SOUS LA TOPBAR DE 140PX)
    ========================================================================== */
 .main-column {
   flex: 1 !important;
   min-width: 0 !important;
+  padding-top: 20px !important;
 }
 
 .app-content {
