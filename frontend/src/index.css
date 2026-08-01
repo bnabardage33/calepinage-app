@@ -25,8 +25,9 @@ body {
 }
 
 /* ==========================================================================
-   TOPBAR (BARRE DU HAUT FIXE SUR L'ÉCRAN PRINCIPAL)
+   TOPBAR FIXE ÉLARGIE (CONTIENT LE GRAND LOGO)
    ========================================================================== */
+header.topbar,
 .topbar {
   display: flex !important;
   align-items: center !important;
@@ -34,12 +35,15 @@ body {
   gap: 1.5rem !important;
   background: var(--anthracite-btp) !important;
   color: white !important;
-  padding: 0.5rem 1.25rem !important;
+  padding: 0 1.25rem !important;
   position: sticky !important;
   top: 0 !important;
   z-index: 40 !important;
-  height: 110px !important; /* Débloque et force la hauteur de la barre */
-  min-height: 110px !important;
+  
+  /* Hauteur de la barre supérieure pour laisser respirer le logo */
+  height: 120px !important; 
+  min-height: 120px !important;
+  max-height: 120px !important;
   border-bottom: 4px solid var(--rouge-logo) !important;
 }
 
@@ -47,7 +51,7 @@ body {
   background: transparent !important;
   border: none !important;
   color: white !important;
-  font-size: 1.8rem !important; /* Icône ☰ bien proportionnée */
+  font-size: 1.8rem !important;
   padding: 0.5rem !important;
   cursor: pointer !important;
   display: flex !important;
@@ -61,35 +65,34 @@ body {
   border-radius: 6px !important;
 }
 
-/* Encart blanc fixe sur la page principale pour le logo */
+/* Encart blanc dans la barre du haut pour le logo */
 .topbar-logo-conteneur {
   background-color: #ffffff !important;
-  padding: 5px 12px !important;
+  padding: 8px 16px !important;
   border-radius: 6px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  height: 80px !important; /* Force la hauteur de l'encart blanc */
-  min-width: 100px !important;
+  height: 90px !important; /* Hauteur généreuse pour un logo bien visible */
+  width: auto !important;
 }
 
 .topbar-logo-img {
-  height: 100% !important; /* L'image remplit l'encart sans déformation */
+  height: 100% !important;
   width: auto !important;
-  max-height: 70px !important;
   object-fit: contain !important;
 }
 
 /* ==========================================================================
-   PANNEAU SIDEBAR COULISSANT MODERNE (JUSTE MILIEU)
+   PANNEAU SIDEBAR COULISSANT EN CONTINU SOUS LA BARRE DU HAUT
    ========================================================================== */
 .sidebar {
   position: fixed !important;
-  top: 110px !important; /* Aligné pile sous la topbar corrigée de 110px */
+  top: 120px !important; /* S'aligne parfaitement sous les 120px de la topbar */
   left: 0 !important;
   width: 90vw !important;
   max-width: 380px !important;
-  height: 72vh !important; /* Hauteur entre-deux validée */
+  height: 72vh !important; /* Hauteur entre-deux conservée */
   margin: 16px !important; /* Effet de carte flottante */
   background: var(--anthracite-btp) !important;
   color: white !important;
@@ -112,32 +115,14 @@ body {
 .sidebar-overlay {
   position: fixed !important;
   inset: 0 !important;
-  top: 110px !important; /* Laisse la barre du haut accessible */
+  top: 120px !important; /* Laisse le bandeau supérieur et le logo accessibles */
   background: rgba(13, 13, 13, 0.5) !important;
   backdrop-filter: blur(4px) !important;
   z-index: 25 !important;
 }
 
-/* LOGO DOUBLE À L'INTÉRIEUR DU MENU DÉROULANT */
-.sidebar-logo-conteneur {
-  width: 100% !important;
-  background-color: #ffffff !important;
-  padding: 1.25rem !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  border-bottom: 3px solid var(--rouge-logo) !important;
-}
-
-.sidebar-logo-img {
-  width: 100% !important;
-  max-width: 150px !important;
-  height: auto !important;
-  object-fit: contain !important;
-}
-
 /* ==========================================================================
-   NAVIGATION ET ONGLET INTERNES
+   NAVIGATION INTERNE (SANS LOGO INTERNE)
    ========================================================================== */
 .sidebar-nav {
   display: flex !important;
@@ -147,7 +132,6 @@ body {
   overflow: hidden !important;
 }
 
-/* Zone centrale défilante pour les catégories BTP */
 .nav-liens-scroll {
   flex: 1 !important;
   padding: 0.75rem !important;
@@ -157,7 +141,6 @@ body {
   gap: 0.25rem !important;
 }
 
-/* Liens du menu par défaut */
 .sidebar-nav a {
   display: flex !important;
   align-items: center !important;
@@ -176,7 +159,6 @@ body {
   color: white !important;
 }
 
-/* Onglet actif sélectionné (Rouge vif) */
 .sidebar-nav a.active {
   background: var(--rouge-logo) !important;
   color: white !important;
@@ -190,7 +172,6 @@ body {
   text-align: center !important;
 }
 
-/* Titres de catégories (ORGANISATION / SUIVI) */
 .sidebar-separateur {
   font-size: 0.72rem !important;
   text-transform: uppercase !important;
@@ -200,7 +181,6 @@ body {
   font-weight: 700 !important;
 }
 
-/* PIED DE MENU FIXE (PARAMÈTRES ET AIDE) */
 .sidebar-footer {
   margin-top: auto !important;
   padding: 0.75rem !important;
