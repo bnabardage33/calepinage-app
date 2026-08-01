@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 const LIENS_ACTIFS = [
@@ -21,10 +22,26 @@ const LIENS_A_VENIR = [
 
 export default function Layout({ children }) {
   const location = useLocation()
+  const [ouvert, setOuvert] = useState(false)
+
+  const fermer = () => setOuvert(false)
 
   return (
     <div className="app-shell">
-      <aside className="sidebar">
+      <header className="topbar">
+        <button
+          className="bouton-menu"
+          onClick={() => setOuvert((v) => !v)}
+          aria-label="Ouvrir le menu"
+        >
+          ☰
+        </button>
+        <span className="topbar-titre">BNA BARDAGE</span>
+      </header>
+
+      {ouvert && <div className="sidebar-overlay" onClick={fermer} />}
+
+      <aside className={`sidebar ${ouvert ? 'ouvert' : ''}`}>
         <div className="sidebar-logo">
           <span className="sidebar-logo-bna">BNA</span>
           <span className="sidebar-logo-bardage">BARDAGE</span>
@@ -36,6 +53,7 @@ export default function Layout({ children }) {
             <Link
               key={lien.to}
               to={lien.to}
+              onClick={fermer}
               className={location.pathname === lien.to ? 'active' : ''}
             >
               <span className="nav-icone">{lien.icone}</span>
