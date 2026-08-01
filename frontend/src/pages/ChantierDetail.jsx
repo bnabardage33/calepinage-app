@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { getChantier, getFacades, calculerMetre } from '../api/client'
 import FacadeForm from '../components/FacadeForm'
 import MetreResult from '../components/MetreResult'
-import MeteoWidget from '../components/MeteoWidget'  // ← import OK
+import MeteoWidget from '../components/MeteoWidget'
 
 export default function ChantierDetail() {
   const { id } = useParams()
