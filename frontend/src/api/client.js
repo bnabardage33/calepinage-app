@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // L'URL du backend sur Render
-const API_BASE = import.meta.env.VITE_API_URL || 'https://ton-backend.onrender.com/api'
+const API_BASE = import.meta.env.VITE_API_URL || 'https://calepinage-app-2gmc.onrender.com/api'
 
 export const api = axios.create({
   baseURL: API_BASE,
