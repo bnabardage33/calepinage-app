@@ -42,7 +42,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="app-shell">
-      {/* Barre supérieure fixe élargie sur l'écran principal */}
+      {/* Barre supérieure fixe contenant le logo de bonne taille */}
       <header className="topbar">
         <button
           className="bouton-menu"
@@ -51,7 +51,6 @@ export default function Layout({ children }) {
         >
           ☰
         </button>
-        {/* Le Logo est ici fixe et visible en permanence sur l'accueil */}
         <div className="topbar-logo-conteneur">
           <img src="/logo.png" alt="BNA Bardage" className="topbar-logo-img" />
         </div>
@@ -59,12 +58,8 @@ export default function Layout({ children }) {
 
       {ouvert && <div className="sidebar-overlay" onClick={fermer} />}
 
-      {/* Menu Coulissant */}
+      {/* Menu Coulissant épuré sans logo à l'intérieur */}
       <aside className={`sidebar ${ouvert ? 'ouvert' : ''}`}>
-        <div className="sidebar-logo-conteneur">
-          <img src="/logo.png" alt="BNA Bardage" className="sidebar-logo-img" />
-        </div>
-
         <nav className="sidebar-nav">
           <div className="nav-liens-scroll">
             {LIENS_PRINCIPAUX.map(renderLien)}
@@ -91,3 +86,4 @@ export default function Layout({ children }) {
     </div>
   )
 }
+
