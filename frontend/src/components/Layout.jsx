@@ -1,31 +1,62 @@
 import { Link, useLocation } from 'react-router-dom'
 
-const LIENS = [
-  { to: '/', label: 'Tableau de bord' },
-  { to: '/chantiers', label: 'Chantiers' },
-  { to: '/clients', label: 'Clients' },
+const LIENS_ACTIFS = [
+  { to: '/', label: 'Tableau de bord', icone: '🏠' },
+  { to: '/chantiers', label: 'Projets', icone: '📋' },
+  { to: '/clients', label: 'Clients', icone: '👥' },
+]
+
+const LIENS_A_VENIR = [
+  { label: 'Devis', icone: '📄' },
+  { label: 'Factures', icone: '🧾' },
+  { label: 'Planning', icone: '📅' },
+  { label: 'Calepinage Pro', icone: '📐' },
+  { label: 'Bibliothèque matériaux', icone: '🧱' },
+  { label: 'Documents', icone: '📁' },
+  { label: 'Suivi de chantier', icone: '🔨' },
+  { label: 'Dépenses', icone: '💶' },
+  { label: 'Rapports', icone: '📊' },
+  { label: 'Paramètres', icone: '⚙️' },
 ]
 
 export default function Layout({ children }) {
   const location = useLocation()
 
   return (
-    <div className="app-layout">
-      <header className="app-header">
-        <div className="app-logo">Calepinage Bardage</div>
-        <nav className="app-nav">
-          {LIENS.map((lien) => (
+    <div className="app-shell">
+      <aside className="sidebar">
+        <div className="sidebar-logo">
+          <span className="sidebar-logo-bna">BNA</span>
+          <span className="sidebar-logo-bardage">BARDAGE</span>
+          <span className="sidebar-logo-region">Nouvelle-Aquitaine</span>
+        </div>
+
+        <nav className="sidebar-nav">
+          {LIENS_ACTIFS.map((lien) => (
             <Link
               key={lien.to}
               to={lien.to}
               className={location.pathname === lien.to ? 'active' : ''}
             >
+              <span className="nav-icone">{lien.icone}</span>
               {lien.label}
             </Link>
           ))}
+
+          <div className="sidebar-separateur">À venir</div>
+
+          {LIENS_A_VENIR.map((lien) => (
+            <span key={lien.label} className="nav-desactive">
+              <span className="nav-icone">{lien.icone}</span>
+              {lien.label}
+            </span>
+          ))}
         </nav>
-      </header>
-      <main className="app-content">{children}</main>
+      </aside>
+
+      <div className="main-column">
+        <main className="app-content">{children}</main>
+      </div>
     </div>
   )
 }
