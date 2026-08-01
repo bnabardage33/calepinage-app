@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { getChantier, getFacades, calculerMetre } from '../api/client'
 import FacadeForm from '../components/FacadeForm'
 import MetreResult from '../components/MetreResult'
-import MeteoWidget from '../components/MeteoWidget'  // ← import OK
+import MeteoWidget from '../components/MeteoWidget'  // ← chemin correct
 
 export default function ChantierDetail() {
   const { id } = useParams()
@@ -34,6 +34,7 @@ export default function ChantierDetail() {
       <p>Statut : {chantier.statut}</p>
       {chantier.montant_estime > 0 && <p>Montant estimé : {chantier.montant_estime} €</p>}
 
+      {/* Widget météo — si le fichier existe bien */}
       {chantier.latitude && chantier.longitude && (
         <div className="chantier-meteo">
           <h3>🌤️ Météo chantier</h3>
