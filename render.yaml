@@ -1,14 +1,26 @@
 services:
+  # ===== BACKEND =====
   - type: web
     name: calepinage-backend
     runtime: python
     plan: free
     buildCommand: "pip install -r backend/requirements.txt"
     startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /api/health
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
-      - key: DATABASE_PATH
-        value: ./calepinage.db
-      - key: METEO_API_KEY
+      - key: DATABASE_URL
+        sync: false  # ⚠️ À remplir dans le dashboard Render
+      - key: DEBUG_KEY
         sync: false
+
+  # ===== FRONTEND =====
+  - type: web
+    name: calepinage-frontend
+    runtime: static
+    buildCommand: "cd frontend && npm install && npm run build"
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: "https://calepinage-backend.onrender.com/api"
