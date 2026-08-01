@@ -1,27 +1,28 @@
 import os
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
+# Supabase PostgreSQL (DATABASE_URL fournie par Supabase)
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-if DATABASE_URL:
-    # Postgres (Supabase) — utilisé en production
-    # SQLAlchemy exige "postgresql://", Supabase donne parfois "postgres://"
-    if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-    engine = create_engine(DATABASE_URL)
-else:
-    # SQLite — utilisé en dev local si DATABASE_URL n'est pas défini
-    DATABASE_PATH = os.environ.get("DATABASE_PATH", "./calepinage.db")
-    engine = create_engine(
-        f"sqlite:///{DATABASE_PATH}", connect_args={"check_same_thread": False}
-    )
+if not DATABASE_URL:
+    raise Exception("❌ DATABASE_URL non définie — vérifie les variables d'environnement sur Render")
+
+# Supabase donne souvent "postgres://" → SQLAlchemy veut "postgresql://"
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# Connexion avec pool pour Supabase
+engine = create_engine(
+    DATABASE_URL,
+    pool_size=5,
+    max_overflow=10,
+    pool_pre_ping=True,  # vérifie la connexion avant chaque requête
+    echo=False
+)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 Base = declarative_base()
-
 
 def get_db():
     db = SessionLocal()
