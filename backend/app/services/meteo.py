@@ -196,7 +196,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.chantier import Chantier
 
-router = APIRouter(prefix="/api/meteo", tags=["meteo"])
+router = APIRouter(prefix="/meteo", tags=["meteo"])
 
 @router.get("/chantier/{chantier_id}")
 async def get_meteo_chantier(chantier_id: int, db: Session = Depends(get_db)):
