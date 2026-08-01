@@ -23,4 +23,4 @@ services:
     staticPublishPath: ./frontend/dist
     envVars:
       - key: VITE_API_URL
-        value: "https://calepinage-backend.onrender.com/api"
+        value: "https://calepinage-app-2gmc.onrender.com/api"
