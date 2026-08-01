@@ -91,7 +91,7 @@ header.topbar,
   left: 8px !important;
   width: 90vw !important;
   max-width: 380px !important;
-  height: 78vh; !important; /* laisse un peu d'air en bas aussi */
+  height: calc(100vh - 120px); !important; /* laisse un peu d'air en bas aussi */
   margin: 0 !important;
   background: var(--anthracite-btp) !important;
   color: white !important;
