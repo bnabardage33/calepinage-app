@@ -53,7 +53,7 @@ export default function MeteoWidget({ chantierId, lat, lon, compact = false }) {
     )
   }
 
-  const { actuel, previsions, demain, peut_travailler } = meteo
+  const { actuel, previsions, demain, peut_travailler, semaine } = meteo
 
   // Version compacte (dashboard)
   if (compact) {
@@ -121,6 +121,26 @@ export default function MeteoWidget({ chantierId, lat, lon, compact = false }) {
               />
               <span className="meteo-prev-temp">{p.temperature}°C</span>
               <span className="meteo-prev-vent">💨 {p.vent} km/h</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Semaine */}
+      {semaine && semaine.length > 0 && (
+        <div className="meteo-semaine">
+          {semaine.map((j, idx) => (
+            <div key={idx} className="meteo-jour">
+              <span className="meteo-jour-nom">{idx === 0 ? "Aujourd'hui" : j.jour}</span>
+              <img
+                src={`https://openweathermap.org/img/wn/${j.icone}@2x.png`}
+                alt={j.description}
+                className="meteo-jour-icone"
+              />
+              <span className="meteo-jour-temp">
+                {j.temp_max}° <span className="meteo-jour-min">/ {j.temp_min}°</span>
+              </span>
+              {j.pluie > 0 && <span className="meteo-jour-pluie">🌧️ {j.pluie}mm</span>}
             </div>
           ))}
         </div>
