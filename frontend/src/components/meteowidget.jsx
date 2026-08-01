@@ -20,6 +20,7 @@ export default function MeteoWidget({ chantierId, lat, lon, compact = false }) {
         }
         const response = await api.get(url)
         setMeteo(response.data)
+        setError(null)
       } catch (err) {
         setError(err.response?.data?.detail || 'Erreur météo')
       } finally {
@@ -28,11 +29,11 @@ export default function MeteoWidget({ chantierId, lat, lon, compact = false }) {
     }
 
     fetchMeteo()
-    // Rafraîchir toutes les 30 minutes
     const interval = setInterval(fetchMeteo, 30 * 60 * 1000)
     return () => clearInterval(interval)
   }, [chantierId, lat, lon])
 
+  // Affichage loading
   if (loading) {
     return (
       <div className="meteo-widget loading">
@@ -42,6 +43,7 @@ export default function MeteoWidget({ chantierId, lat, lon, compact = false }) {
     )
   }
 
+  // Affichage erreur
   if (error || !meteo) {
     return (
       <div className="meteo-widget error">
@@ -53,6 +55,7 @@ export default function MeteoWidget({ chantierId, lat, lon, compact = false }) {
 
   const { actuel, previsions, demain, peut_travailler } = meteo
 
+  // Version compacte (dashboard)
   if (compact) {
     return (
       <div className={`meteo-widget compact ${peut_travailler.ok ? 'ok' : 'alerte'}`}>
@@ -75,8 +78,15 @@ export default function MeteoWidget({ chantierId, lat, lon, compact = false }) {
     )
   }
 
+  // Version complète (page chantier)
   return (
     <div className="meteo-widget full">
+      {/* En-tête */}
+      <div className="meteo-header">
+        <span className="meteo-ville">📍 {meteo.ville}, {meteo.pays}</span>
+        <span className="meteo-maj">🔄 {new Date(meteo.maj).toLocaleTimeString('fr-FR')}</span>
+      </div>
+
       {/* Météo actuelle */}
       <div className="meteo-actuel">
         <div className="meteo-principale">
