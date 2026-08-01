@@ -28,7 +28,6 @@ export default function Layout({ children }) {
 
   const fermer = () => setOuvert(false)
 
-  // Fonction utilitaire pour générer les éléments de liens réutilisables
   const renderLien = (lien) => (
     <Link
       key={lien.to}
@@ -43,7 +42,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="app-shell">
-      {/* Topbar classique simplifiée sur l'écran principal */}
+      {/* Barre supérieure fixe élargie sur l'écran principal */}
       <header className="topbar">
         <button
           className="bouton-menu"
@@ -52,37 +51,29 @@ export default function Layout({ children }) {
         >
           ☰
         </button>
-        <span className="topbar-titre">BNA BARDAGE</span>
+        {/* Le Logo est ici fixe et visible en permanence sur l'accueil */}
+        <div className="topbar-logo-conteneur">
+          <img src="/logo.png" alt="BNA Bardage" className="topbar-logo-img" />
+        </div>
       </header>
 
-      {/* Arrière-plan assombri */}
       {ouvert && <div className="sidebar-overlay" onClick={fermer} />}
 
-      {/* Menu Coulissant Arrondi (Style Mobile BTP) */}
+      {/* Menu Coulissant */}
       <aside className={`sidebar ${ouvert ? 'ouvert' : ''}`}>
-        
-        {/* Le Logo est désormais fixe TOUT EN HAUT du menu coulissant */}
         <div className="sidebar-logo-conteneur">
           <img src="/logo.png" alt="BNA Bardage" className="sidebar-logo-img" />
         </div>
 
-        {/* Corps du menu avec défilement interne */}
         <nav className="sidebar-nav">
           <div className="nav-liens-scroll">
-            
-            {/* Section 1 : Navigation principale */}
             {LIENS_PRINCIPAUX.map(renderLien)}
-
-            {/* Section 2 : Organisation */}
             <div className="sidebar-separateur">Organisation</div>
             {LIENS_ORGANISATION.map(renderLien)}
-
-            {/* Section 3 : Suivi */}
             <div className="sidebar-separateur">Suivi</div>
             {LIENS_SUIVI.map(renderLien)}
           </div>
 
-          {/* Pied du menu fixe : Paramètres et Aide */}
           <div className="sidebar-footer">
             <Link to="/parametres" onClick={fermer} className={location.pathname === '/parametres' ? 'active' : ''}>
               <span className="nav-icone">⚙️</span> Paramètres
@@ -94,7 +85,6 @@ export default function Layout({ children }) {
         </nav>
       </aside>
 
-      {/* Zone de contenu central de l'application */}
       <div className="main-column">
         <main className="app-content">{children}</main>
       </div>
