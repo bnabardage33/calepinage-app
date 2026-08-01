@@ -1,0 +1,187 @@
+import os
+import json
+import aiohttp
+from datetime import datetime, timedelta
+from typing import Optional, Dict, Any
+from sqlalchemy.orm import Session
+from app.models.planning import Intervention, Avancement
+
+# Clé API OpenWeatherMap (gratuite)
+METEO_API_KEY = os.environ.get("METEO_API_KEY")
+METEO_CACHE_DUREE = timedelta(hours=1)  # Cache 1h
+
+class MeteoService:
+    """Service de récupération et cache des données météo"""
+    
+    _cache = {}  # Cache simple en mémoire
+    
+    @classmethod
+    async def get_meteo(cls, lat: float, lon: float) -> Dict[str, Any]:
+        """Récupère la météo pour des coordonnées (avec cache)"""
+        cache_key = f"{lat:.4f},{lon:.4f}"
+        
+        # Vérifier le cache
+        if cache_key in cls._cache:
+            data, timestamp = cls._cache[cache_key]
+            if datetime.now() - timestamp < METEO_CACHE_DUREE:
+                return data
+        
+        # Appel API
+        if not METEO_API_KEY:
+            return cls._fallback_meteo(lat, lon)
+        
+        try:
+            url = "https://api.openweathermap.org/data/2.5/forecast"
+            params = {
+                "lat": lat,
+                "lon": lon,
+                "appid": METEO_API_KEY,
+                "units": "metric",
+                "lang": "fr",
+                "cnt": 8  # 8 prévisions sur 24h
+            }
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, params=params) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        # Mise en cache
+                        cls._cache[cache_key] = (data, datetime.now())
+                        return cls._format_meteo(data)
+                    else:
+                        return cls._fallback_meteo(lat, lon)
+        except Exception as e:
+            print(f"⚠️ Erreur météo: {e}")
+            return cls._fallback_meteo(lat, lon)
+    
+    @classmethod
+    def _format_meteo(cls, data: Dict) -> Dict:
+        """Formate les données pour l'affichage"""
+        if not data.get("list"):
+            return cls._fallback_meteo(0, 0)
+        
+        today = data["list"][0]
+        tomorrow = data["list"][4] if len(data["list"]) > 4 else today
+        
+        return {
+            "actuel": {
+                "temperature": round(today["main"]["temp"]),
+                "ressenti": round(today["main"]["feels_like"]),
+                "humidite": today["main"]["humidity"],
+                "vent": round(today["wind"]["speed"] * 3.6),  # m/s → km/h
+                "vent_rafales": round(today["wind"].get("gust", 0) * 3.6),
+                "description": today["weather"][0]["description"],
+                "icone": today["weather"][0]["icon"],
+                "pluie": today.get("rain", {}).get("3h", 0),
+            },
+            "previsions": [
+                {
+                    "heure": item["dt_txt"][11:16],
+                    "temperature": round(item["main"]["temp"]),
+                    "description": item["weather"][0]["description"],
+                    "icone": item["weather"][0]["icon"],
+                    "pluie": item.get("rain", {}).get("3h", 0),
+                    "vent": round(item["wind"]["speed"] * 3.6),
+                }
+                for item in data["list"][:4]
+            ],
+            "demain": {
+                "temperature": round(tomorrow["main"]["temp"]),
+                "description": tomorrow["weather"][0]["description"],
+                "icone": tomorrow["weather"][0]["icon"],
+                "pluie": tomorrow.get("rain", {}).get("3h", 0),
+            },
+            "peut_travailler": cls._peut_travailler(data["list"][0]),
+        }
+    
+    @classmethod
+    def _peut_travailler(cls, prevision: Dict) -> Dict:
+        """Vérifie si les conditions sont bonnes pour le bardage"""
+        pluie = prevision.get("rain", {}).get("3h", 0)
+        vent = prevision["wind"]["speed"] * 3.6  # km/h
+        temperature = prevision["main"]["temp"]
+        
+        # Conditions favorables pour le bardage
+        pluie_ok = pluie < 0.5  # Moins de 0.5mm/3h
+        vent_ok = vent < 40  # Moins de 40 km/h
+        temp_ok = temperature > 0  # Pas de gel
+        
+        return {
+            "ok": pluie_ok and vent_ok and temp_ok,
+            "pluie_ok": pluie_ok,
+            "vent_ok": vent_ok,
+            "temp_ok": temp_ok,
+            "message": cls._message_meteo(pluie_ok, vent_ok, temp_ok)
+        }
+    
+    @classmethod
+    def _message_meteo(cls, pluie_ok: bool, vent_ok: bool, temp_ok: bool) -> str:
+        if pluie_ok and vent_ok and temp_ok:
+            return "✅ Conditions idéales pour le bardage"
+        elif not pluie_ok:
+            return "⚠️ Risque de pluie — protéger les matériaux"
+        elif not vent_ok:
+            return "⚠️ Vent fort — attention aux manipulations en hauteur"
+        elif not temp_ok:
+            return "❌ Température trop basse — risque de gel"
+        else:
+            return "⚠️ Conditions dégradées — prudence"
+    
+    @classmethod
+    def _fallback_meteo(cls, lat: float, lon: float) -> Dict:
+        """Données météo de secours (si API indisponible)"""
+        return {
+            "actuel": {
+                "temperature": "N/A",
+                "ressenti": "N/A",
+                "humidite": "N/A",
+                "vent": "N/A",
+                "description": "Données non disponibles",
+                "icone": "01d",
+                "pluie": 0,
+            },
+            "previsions": [],
+            "demain": {
+                "temperature": "N/A",
+                "description": "N/A",
+                "icone": "01d",
+                "pluie": 0,
+            },
+            "peut_travailler": {
+                "ok": False,
+                "message": "⚠️ Météo indisponible — vérifier sur site",
+                "pluie_ok": False,
+                "vent_ok": False,
+                "temp_ok": False,
+            }
+        }
+
+
+# ===== ENDPOINT FASTAPI =====
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from app.database import get_db
+from app.models.chantier import Chantier
+
+router = APIRouter(prefix="/api/meteo", tags=["meteo"])
+
+@router.get("/chantier/{chantier_id}")
+async def get_meteo_chantier(chantier_id: int, db: Session = Depends(get_db)):
+    """Récupère la météo pour un chantier (via latitude/longitude)"""
+    chantier = db.get(Chantier, chantier_id)
+    if not chantier:
+        raise HTTPException(status_code=404, detail="Chantier introuvable")
+    
+    if not chantier.latitude or not chantier.longitude:
+        raise HTTPException(
+            status_code=400,
+            detail="Coordonnées GPS non renseignées pour ce chantier"
+        )
+    
+    return await MeteoService.get_meteo(chantier.latitude, chantier.longitude)
+
+
+@router.get("/coords")
+async def get_meteo_coords(lat: float, lon: float):
+    """Récupère la météo pour des coordonnées GPS"""
+    return await MeteoService.get_meteo(lat, lon)
