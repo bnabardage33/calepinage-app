@@ -52,26 +52,26 @@ body {
   font-size: 0.95rem;
 }
 
-/* PANNEAU SIDEBAR COULISSANT MODERNE (FLOATING DESIGN) */
+/* PANNEAU SIDEBAR COULISSANT MODERNE (AJUSTÉ) */
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
-  width: 80%;               /* Prend 80% de la largeur mobile */
-  max-width: 290px;         /* Évite d'être trop large sur tablette */
-  height: calc(100vh - 24px); /* S'arrête avant le bas (laisse 12px de marge en haut/bas) */
-  margin: 12px;             /* Crée l'effet flottant détaché des bords */
+  width: 90%;               /* Élargi d'un quart (passé de 80% à 90% pour être plus large) */
+  max-width: 340px;         /* Augmenté pour s'adapter à la nouvelle largeur */
+  height: 55vh;             /* Réduit de moitié en hauteur (occupe environ 55% de l'écran) */
+  margin: 12px;             /* Conserve l'effet flottant détaché des bords */
   background: var(--anthracite-btp);
   color: white;
   display: flex;
   flex-direction: column;
   padding: 0;
-  transform: translateX(-120%); /* Caché plus loin à cause de la marge */
+  transform: translateX(-120%);
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 30;
-  border-radius: 16px;      /* Beaux coins arrondis modernes */
+  border-radius: 16px;      /* Coins arrondis préservés */
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-  overflow: hidden;         /* Force le contenu à respecter les coins arrondis */
+  overflow: hidden;         /* Force le contenu et le scroll à respecter les coins */
 }
 
 .sidebar.ouvert {
