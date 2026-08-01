@@ -10,255 +10,258 @@
 }
 
 * {
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--gris-clair);
-  color: #1a1a2e;
+  margin: 0 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  background: var(--gris-clair) !important;
+  color: #1a1a2e !important;
 }
 
 .app-shell {
-  min-height: 100vh;
+  min-height: 100vh !important;
 }
 
 /* ==========================================================================
    TOPBAR (BARRE DU HAUT FIXE SUR L'ÉCRAN PRINCIPAL)
    ========================================================================== */
 .topbar {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  background: var(--anthracite-btp);
-  color: white;
-  padding: 0.5rem 1.25rem;
-  position: sticky;
-  top: 0;
-  z-index: 40; /* Reste au-dessus de la sidebar et de l'overlay */
-  height: 105px; /* Hauteur élargie pour accueillir confortablement le logo */
-  border-bottom: 4px solid var(--rouge-logo); /* Rappel de la ligne rouge du logo */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 1.5rem !important;
+  background: var(--anthracite-btp) !important;
+  color: white !important;
+  padding: 0.5rem 1.25rem !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 40 !important;
+  height: 110px !important; /* Débloque et force la hauteur de la barre */
+  min-height: 110px !important;
+  border-bottom: 4px solid var(--rouge-logo) !important;
 }
 
 .bouton-menu {
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 1.6rem;
-  padding: 0.4rem 0.6rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: transparent !important;
+  border: none !important;
+  color: white !important;
+  font-size: 1.8rem !important; /* Icône ☰ bien proportionnée */
+  padding: 0.5rem !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: auto !important;
 }
 
 .bouton-menu:hover {
-  background: var(--anthracite-survol);
-  border-radius: 6px;
+  background: var(--anthracite-survol) !important;
+  border-radius: 6px !important;
 }
 
-/* Encart blanc fixe sur la page principale pour détacher le logo */
+/* Encart blanc fixe sur la page principale pour le logo */
 .topbar-logo-conteneur {
-  background-color: #ffffff;
-  padding: 0.4rem 1rem;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 75px; /* Bel espace accordé à l'image */
+  background-color: #ffffff !important;
+  padding: 5px 12px !important;
+  border-radius: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 80px !important; /* Force la hauteur de l'encart blanc */
+  min-width: 100px !important;
 }
 
 .topbar-logo-img {
-  height: 100%;
-  width: auto;
-  max-width: 160px;
-  object-fit: contain;
+  height: 100% !important; /* L'image remplit l'encart sans déformation */
+  width: auto !important;
+  max-height: 70px !important;
+  object-fit: contain !important;
 }
 
 /* ==========================================================================
    PANNEAU SIDEBAR COULISSANT MODERNE (JUSTE MILIEU)
    ========================================================================== */
 .sidebar {
-  position: fixed;
-  top: 105px; /* Démarre pile sous la nouvelle topbar élargie */
-  left: 0;
-  width: 90vw; /* Élargi à 90% de l'écran pour une meilleure assise visuelle */
-  max-width: 380px; /* Largeur maximale pour conserver un bel équilibre */
-  height: 72vh; /* Hauteur idéale : entre-deux validé visuellement */
-  margin: 16px; /* Effet de carte flottante détachée des bords de l'écran */
-  background: var(--anthracite-btp);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  transform: translateX(-120%);
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 30;
-  border-radius: 20px; /* Coins arrondis esthétiques */
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-  overflow: hidden; /* Protège l'arrondi des coins */
+  position: fixed !important;
+  top: 110px !important; /* Aligné pile sous la topbar corrigée de 110px */
+  left: 0 !important;
+  width: 90vw !important;
+  max-width: 380px !important;
+  height: 72vh !important; /* Hauteur entre-deux validée */
+  margin: 16px !important; /* Effet de carte flottante */
+  background: var(--anthracite-btp) !important;
+  color: white !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 !important;
+  transform: translateX(-120%) !important;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  z-index: 30 !important;
+  border-radius: 20px !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4) !important;
+  overflow: hidden !important;
 }
 
 .sidebar.ouvert {
-  transform: translateX(0);
+  transform: translateX(0) !important;
 }
 
-/* ARRIÈRE-PLAN ASSOMBRI AVEC FLOU (LAISSE LA TOPBAR ACCESSIBLE) */
+/* ARRIÈRE-PLAN ASSOMBRI AVEC FLOU */
 .sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  top: 105px; /* Laisse la barre du haut libre pour pouvoir refermer en recliquant sur ☰ */
-  background: rgba(13, 13, 13, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 25;
+  position: fixed !important;
+  inset: 0 !important;
+  top: 110px !important; /* Laisse la barre du haut accessible */
+  background: rgba(13, 13, 13, 0.5) !important;
+  backdrop-filter: blur(4px) !important;
+  z-index: 25 !important;
 }
 
-/* LOGO DOUBLÉ À L'INTÉRIEUR DU MENU DEROULANT (MÊME STYLE) */
+/* LOGO DOUBLE À L'INTÉRIEUR DU MENU DÉROULANT */
 .sidebar-logo-conteneur {
-  width: 100%;
-  background-color: #ffffff;
-  padding: 1.25rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  border-bottom: 3px solid var(--rouge-logo);
+  width: 100% !important;
+  background-color: #ffffff !important;
+  padding: 1.25rem !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border-bottom: 3px solid var(--rouge-logo) !important;
 }
 
 .sidebar-logo-img {
-  width: 100%;
-  max-width: 150px;
-  height: auto;
-  object-fit: contain;
+  width: 100% !important;
+  max-width: 150px !important;
+  height: auto !important;
+  object-fit: contain !important;
 }
 
 /* ==========================================================================
    NAVIGATION ET ONGLET INTERNES
    ========================================================================== */
 .sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 0;
-  overflow: hidden;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
 }
 
 /* Zone centrale défilante pour les catégories BTP */
 .nav-liens-scroll {
-  flex: 1;
-  padding: 0.75rem;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  flex: 1 !important;
+  padding: 0.75rem !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.25rem !important;
 }
 
 /* Liens du menu par défaut */
 .sidebar-nav a {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.7rem 0.85rem;
-  border-radius: 8px;
-  color: var(--gris-metallise);
-  text-decoration: none;
-  font-size: 0.92rem;
-  font-weight: 500;
-  transition: background 0.15s ease, color 0.15s ease;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0.7rem 0.85rem !important;
+  border-radius: 8px !important;
+  color: var(--gris-metallise) !important;
+  text-decoration: none !important;
+  font-size: 0.92rem !important;
+  font-weight: 500 !important;
+  transition: background 0.15s ease, color 0.15s ease !important;
 }
 
 .sidebar-nav a:hover {
-  background: var(--anthracite-survol);
-  color: white;
+  background: var(--anthracite-survol) !important;
+  color: white !important;
 }
 
 /* Onglet actif sélectionné (Rouge vif) */
 .sidebar-nav a.active {
-  background: var(--rouge-logo);
-  color: white;
-  font-weight: 700;
-  box-shadow: 0 4px 12px rgba(230, 30, 37, 0.25);
+  background: var(--rouge-logo) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 12px rgba(230, 30, 37, 0.25) !important;
 }
 
 .nav-icone {
-  font-size: 1.1rem;
-  width: 1.4rem;
-  text-align: center;
+  font-size: 1.1rem !important;
+  width: 1.4rem !important;
+  text-align: center !important;
 }
 
 /* Titres de catégories (ORGANISATION / SUIVI) */
 .sidebar-separateur {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #798291;
-  padding: 1.25rem 0.85rem 0.4rem;
-  font-weight: 700;
+  font-size: 0.72rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: #798291 !important;
+  padding: 1.25rem 0.85rem 0.4rem !important;
+  font-weight: 700 !important;
 }
 
 /* PIED DE MENU FIXE (PARAMÈTRES ET AIDE) */
 .sidebar-footer {
-  margin-top: auto;
-  padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.2);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 12px));
+  margin-top: auto !important;
+  padding: 0.75rem !important;
+  background: rgba(0, 0, 0, 0.2) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.2rem !important;
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 12px)) !important;
 }
 
 /* ==========================================================================
    ZONE DE CONTENU DE L'APPLICATION
    ========================================================================== */
 .main-column {
-  flex: 1;
-  min-width: 0;
+  flex: 1 !important;
+  min-width: 0 !important;
 }
 
 .app-content {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 2rem 1.75rem;
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+  padding: 2rem 1.75rem !important;
 }
 
 h1 {
-  margin-top: 0;
-  font-size: 1.6rem;
+  margin-top: 0 !important;
+  font-size: 1.6rem !important;
 }
 
 h1 + p {
-  color: var(--gris-texte);
-  margin-top: 0.5rem;
+  color: var(--gris-texte) !important;
+  margin-top: 0.5rem !important;
 }
 
 .erreur {
-  color: var(--rouge-logo);
-  font-weight: 600;
+  color: var(--rouge-logo) !important;
+  font-weight: 600 !important;
 }
 
 ul {
-  padding-left: 0;
-  list-style: none;
+  padding-left: 0 !important;
+  list-style: none !important;
 }
 
 li {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem !important;
 }
 
 li a {
-  display: block;
-  background: white;
-  border: 1px solid var(--bordure);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  text-decoration: none;
-  color: #1a1a2e;
-  font-weight: 600;
-  font-size: 0.92rem;
+  display: block !important;
+  background: white !important;
+  border: 1px solid var(--bordure) !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1rem !important;
+  text-decoration: none !important;
+  color: #1a1a2e !important;
+  font-weight: 600 !important;
+  font-size: 0.92rem !important;
 }
 
 li a:hover {
-  border-color: var(--rouge-logo);
+  border-color: var(--rouge-logo) !important;
 }
