@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+// Ajustez le chemin d'importation ci-dessous selon l'emplacement réel de votre image
+import logoImage from '../assets/logo.png' 
 
 const LIENS_ACTIFS = [
   { to: '/', label: 'Tableau de bord', icone: '🏠' },
@@ -17,7 +19,6 @@ const LIENS_A_VENIR = [
   { label: 'Suivi de chantier', icone: '🔨' },
   { label: 'Dépenses', icone: '💶' },
   { label: 'Rapports', icone: '📊' },
-  { label: 'Paramètres', icone: '⚙️' },
 ]
 
 export default function Layout({ children }) {
@@ -39,36 +40,48 @@ export default function Layout({ children }) {
         <span className="topbar-titre">BNA BARDAGE</span>
       </header>
 
+      {/* L'overlay couvre l'arrière-plan en gris semi-transparent quand le menu est ouvert */}
       {ouvert && <div className="sidebar-overlay" onClick={fermer} />}
 
       <aside className={`sidebar ${ouvert ? 'ouvert' : ''}`}>
-        <div className="sidebar-logo">
-          <span className="sidebar-logo-bna">BNA</span>
-          <span className="sidebar-logo-bardage">BARDAGE</span>
-          <span className="sidebar-logo-region">Nouvelle-Aquitaine</span>
+        
+        {/* Le conteneur du logo sur fond blanc pour faire ressortir l'image */}
+        <div className="sidebar-logo-conteneur">
+          <img src={logoImage} alt="BNA Bardage" className="sidebar-logo-img" />
         </div>
 
+        {/* Le corps de la navigation */}
         <nav className="sidebar-nav">
-          {LIENS_ACTIFS.map((lien) => (
-            <Link
-              key={lien.to}
-              to={lien.to}
-              onClick={fermer}
-              className={location.pathname === lien.to ? 'active' : ''}
-            >
-              <span className="nav-icone">{lien.icone}</span>
-              {lien.label}
-            </Link>
-          ))}
+          <div className="nav-liens-scroll">
+            {LIENS_ACTIFS.map((lien) => (
+              <Link
+                key={lien.to}
+                to={lien.to}
+                onClick={fermer}
+                className={location.pathname === lien.to ? 'active' : ''}
+              >
+                <span className="nav-icone">{lien.icone}</span>
+                {lien.label}
+              </Link>
+            ))}
 
-          <div className="sidebar-separateur">À venir</div>
+            <div className="sidebar-separateur">À venir</div>
 
-          {LIENS_A_VENIR.map((lien) => (
-            <span key={lien.label} className="nav-desactive">
-              <span className="nav-icone">{lien.icone}</span>
-              {lien.label}
+            {LIENS_A_VENIR.map((lien) => (
+              <span key={lien.label} className="nav-desactive">
+                <span className="nav-icone">{lien.icone}</span>
+                {lien.label}
+              </span>
+            ))}
+          </div>
+
+          {/* Section Paramètres isolée pour être propulsée tout en bas */}
+          <div className="sidebar-footer">
+            <span className="nav-desactive">
+              <span className="nav-icone">⚙️</span>
+              Paramètres
             </span>
-          ))}
+          </div>
         </nav>
       </aside>
 
