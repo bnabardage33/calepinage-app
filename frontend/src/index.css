@@ -87,22 +87,22 @@ header.topbar,
    ========================================================================== */
 .sidebar {
   position: fixed !important;
-  top: 120px !important; /* juste sous la topbar, sans espace */
-  left: 0 !important;
+  top: 128px !important; /* topbar (120px) + petite marge de 8px */
+  left: 8px !important;
   width: 90vw !important;
   max-width: 380px !important;
-  height: calc(100vh - 120px) !important; /* prend toute la hauteur restante */
-  margin: 0 !important; /* plus d'effet flottant */
+  height: calc(100vh - 144px) !important; /* laisse un peu d'air en bas aussi */
+  margin: 0 !important;
   background: var(--anthracite-btp) !important;
   color: white !important;
   display: flex !important;
   flex-direction: column !important;
   padding: 0 !important;
-  transform: translateX(-100%) !important;
+  transform: translateX(-120%) !important;
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
   z-index: 30 !important;
-  border-radius: 0 !important; /* plus d'arrondi, collé au bord */
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4) !important;
   overflow: hidden !important;
 }
 
