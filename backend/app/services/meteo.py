@@ -17,21 +17,26 @@ class MeteoService:
     async def get_meteo(cls, lat: float, lon: float, db: Optional[Session] = None) -> Dict[str, Any]:
         """Récupère la météo avec cache en base de données"""
         
-        # Vérifier le cache en base
+        cache_key = f"{lat:.4f},{lon:.4f}"
+
+        # Vérifier le cache en base (silencieux si la table n'existe pas encore)
         if db:
-            cache_key = f"{lat:.4f},{lon:.4f}"
-            result = db.execute(
-                text("""
-                    SELECT donnees, date_expiration 
-                    FROM cache_meteo 
-                    WHERE coord_key = :key 
-                      AND date_expiration > NOW()
-                """),
-                {"key": cache_key}
-            ).fetchone()
-            
-            if result:
-                return result[0]
+            try:
+                result = db.execute(
+                    text("""
+                        SELECT donnees, date_expiration 
+                        FROM cache_meteo 
+                        WHERE coord_key = :key 
+                          AND date_expiration > NOW()
+                    """),
+                    {"key": cache_key}
+                ).fetchone()
+                
+                if result:
+                    return result[0]
+            except Exception as e:
+                print(f"⚠️ Cache météo indisponible (lecture) : {e}")
+                db.rollback()
         
         # Appel API
         if not METEO_API_KEY:
@@ -54,24 +59,28 @@ class MeteoService:
                         data = await response.json()
                         formatted = cls._format_meteo(data)
                         
-                        # Sauvegarder en cache
+                        # Sauvegarder en cache (silencieux si la table n'existe pas encore)
                         if db:
-                            db.execute(
-                                text("""
-                                    INSERT INTO cache_meteo (coord_key, donnees, date_expiration)
-                                    VALUES (:key, :donnees, :expiration)
-                                    ON CONFLICT (coord_key) DO UPDATE
-                                    SET donnees = :donnees, 
-                                        date_recuperation = NOW(),
-                                        date_expiration = :expiration
-                                """),
-                                {
-                                    "key": cache_key,
-                                    "donnees": json.dumps(formatted),
-                                    "expiration": datetime.now() + METEO_CACHE_DUREE
-                                }
-                            )
-                            db.commit()
+                            try:
+                                db.execute(
+                                    text("""
+                                        INSERT INTO cache_meteo (coord_key, donnees, date_expiration)
+                                        VALUES (:key, :donnees, :expiration)
+                                        ON CONFLICT (coord_key) DO UPDATE
+                                        SET donnees = :donnees, 
+                                            date_recuperation = NOW(),
+                                            date_expiration = :expiration
+                                    """),
+                                    {
+                                        "key": cache_key,
+                                        "donnees": json.dumps(formatted),
+                                        "expiration": datetime.now() + METEO_CACHE_DUREE
+                                    }
+                                )
+                                db.commit()
+                            except Exception as e:
+                                print(f"⚠️ Cache météo indisponible (écriture) : {e}")
+                                db.rollback()
                         
                         return formatted
                     else:
@@ -223,6 +232,10 @@ async def get_meteo_coords(lat: float, lon: float, db: Session = Depends(get_db)
 @router.get("/cache/clear")
 async def clear_meteo_cache(db: Session = Depends(get_db)):
     """Vide le cache météo (admin)"""
-    db.execute(text("DELETE FROM cache_meteo"))
-    db.commit()
-    return {"status": "Cache vidé avec succès"}
+    try:
+        db.execute(text("DELETE FROM cache_meteo"))
+        db.commit()
+        return {"status": "Cache vidé avec succès"}
+    except Exception as e:
+        db.rollback()
+        return {"status": f"Cache indisponible : {e}"}
