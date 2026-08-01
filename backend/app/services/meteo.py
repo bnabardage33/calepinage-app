@@ -50,7 +50,7 @@ class MeteoService:
                 "appid": METEO_API_KEY,
                 "units": "metric",
                 "lang": "fr",
-                "cnt": 8
+                "cnt": 40
             }
             
             async with aiohttp.ClientSession() as session:
@@ -128,11 +128,43 @@ class MeteoService:
                 "vent": round(tomorrow["wind"]["speed"] * 3.6),
             },
             "peut_travailler": cls._peut_travailler(data["list"][0]),
+            "semaine": cls._build_semaine(data),
             "ville": data.get("city", {}).get("name", "Inconnu"),
             "pays": data.get("city", {}).get("country", ""),
             "maj": datetime.now().isoformat(),
         }
     
+    @classmethod
+    def _build_semaine(cls, data: Dict) -> list:
+        """Regroupe les prévisions 3h par jour pour une vue hebdomadaire"""
+        par_jour: Dict[str, list] = {}
+        for item in data.get("list", []):
+            date_str = item["dt_txt"][:10]
+            par_jour.setdefault(date_str, []).append(item)
+
+        semaine = []
+        for date_str, items in list(par_jour.items())[:6]:
+            temps = [i["main"]["temp"] for i in items]
+            pluie = sum(i.get("rain", {}).get("3h", 0) for i in items)
+            # Créneau le plus proche de midi pour représenter le jour
+            ref = min(items, key=lambda i: abs(int(i["dt_txt"][11:13]) - 12))
+            semaine.append({
+                "date": date_str,
+                "jour": cls._nom_jour(date_str),
+                "temp_min": round(min(temps)),
+                "temp_max": round(max(temps)),
+                "description": ref["weather"][0]["description"],
+                "icone": ref["weather"][0]["icon"],
+                "pluie": round(pluie, 1),
+            })
+        return semaine
+
+    @classmethod
+    def _nom_jour(cls, date_str: str) -> str:
+        jours = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"]
+        d = datetime.strptime(date_str, "%Y-%m-%d")
+        return jours[d.weekday()]
+
     @classmethod
     def _peut_travailler(cls, prevision: Dict) -> Dict:
         """Vérifie si les conditions sont bonnes pour le bardage"""
@@ -193,6 +225,7 @@ class MeteoService:
                 "vent_ok": False,
                 "temp_ok": False,
             },
+            "semaine": [],
             "ville": "Inconnu",
             "pays": "",
             "maj": datetime.now().isoformat(),
