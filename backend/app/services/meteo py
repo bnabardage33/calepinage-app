@@ -4,27 +4,34 @@ import aiohttp
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 from sqlalchemy.orm import Session
-from app.models.planning import Intervention, Avancement
+from app.database import SessionLocal
+from sqlalchemy import text
 
-# Clé API OpenWeatherMap (gratuite)
 METEO_API_KEY = os.environ.get("METEO_API_KEY")
-METEO_CACHE_DUREE = timedelta(hours=1)  # Cache 1h
+METEO_CACHE_DUREE = timedelta(hours=1)
 
 class MeteoService:
     """Service de récupération et cache des données météo"""
     
-    _cache = {}  # Cache simple en mémoire
-    
     @classmethod
-    async def get_meteo(cls, lat: float, lon: float) -> Dict[str, Any]:
-        """Récupère la météo pour des coordonnées (avec cache)"""
-        cache_key = f"{lat:.4f},{lon:.4f}"
+    async def get_meteo(cls, lat: float, lon: float, db: Optional[Session] = None) -> Dict[str, Any]:
+        """Récupère la météo avec cache en base de données"""
         
-        # Vérifier le cache
-        if cache_key in cls._cache:
-            data, timestamp = cls._cache[cache_key]
-            if datetime.now() - timestamp < METEO_CACHE_DUREE:
-                return data
+        # Vérifier le cache en base
+        if db:
+            cache_key = f"{lat:.4f},{lon:.4f}"
+            result = db.execute(
+                text("""
+                    SELECT donnees, date_expiration 
+                    FROM cache_meteo 
+                    WHERE coord_key = :key 
+                      AND date_expiration > NOW()
+                """),
+                {"key": cache_key}
+            ).fetchone()
+            
+            if result:
+                return result[0]
         
         # Appel API
         if not METEO_API_KEY:
@@ -38,16 +45,35 @@ class MeteoService:
                 "appid": METEO_API_KEY,
                 "units": "metric",
                 "lang": "fr",
-                "cnt": 8  # 8 prévisions sur 24h
+                "cnt": 8
             }
             
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, params=params) as response:
                     if response.status == 200:
                         data = await response.json()
-                        # Mise en cache
-                        cls._cache[cache_key] = (data, datetime.now())
-                        return cls._format_meteo(data)
+                        formatted = cls._format_meteo(data)
+                        
+                        # Sauvegarder en cache
+                        if db:
+                            db.execute(
+                                text("""
+                                    INSERT INTO cache_meteo (coord_key, donnees, date_expiration)
+                                    VALUES (:key, :donnees, :expiration)
+                                    ON CONFLICT (coord_key) DO UPDATE
+                                    SET donnees = :donnees, 
+                                        date_recuperation = NOW(),
+                                        date_expiration = :expiration
+                                """),
+                                {
+                                    "key": cache_key,
+                                    "donnees": json.dumps(formatted),
+                                    "expiration": datetime.now() + METEO_CACHE_DUREE
+                                }
+                            )
+                            db.commit()
+                        
+                        return formatted
                     else:
                         return cls._fallback_meteo(lat, lon)
         except Exception as e:
@@ -68,7 +94,7 @@ class MeteoService:
                 "temperature": round(today["main"]["temp"]),
                 "ressenti": round(today["main"]["feels_like"]),
                 "humidite": today["main"]["humidity"],
-                "vent": round(today["wind"]["speed"] * 3.6),  # m/s → km/h
+                "vent": round(today["wind"]["speed"] * 3.6),
                 "vent_rafales": round(today["wind"].get("gust", 0) * 3.6),
                 "description": today["weather"][0]["description"],
                 "icone": today["weather"][0]["icon"],
@@ -90,21 +116,24 @@ class MeteoService:
                 "description": tomorrow["weather"][0]["description"],
                 "icone": tomorrow["weather"][0]["icon"],
                 "pluie": tomorrow.get("rain", {}).get("3h", 0),
+                "vent": round(tomorrow["wind"]["speed"] * 3.6),
             },
             "peut_travailler": cls._peut_travailler(data["list"][0]),
+            "ville": data.get("city", {}).get("name", "Inconnu"),
+            "pays": data.get("city", {}).get("country", ""),
+            "maj": datetime.now().isoformat(),
         }
     
     @classmethod
     def _peut_travailler(cls, prevision: Dict) -> Dict:
         """Vérifie si les conditions sont bonnes pour le bardage"""
         pluie = prevision.get("rain", {}).get("3h", 0)
-        vent = prevision["wind"]["speed"] * 3.6  # km/h
+        vent = prevision["wind"]["speed"] * 3.6
         temperature = prevision["main"]["temp"]
         
-        # Conditions favorables pour le bardage
-        pluie_ok = pluie < 0.5  # Moins de 0.5mm/3h
-        vent_ok = vent < 40  # Moins de 40 km/h
-        temp_ok = temperature > 0  # Pas de gel
+        pluie_ok = pluie < 0.5
+        vent_ok = vent < 40
+        temp_ok = temperature > 0
         
         return {
             "ok": pluie_ok and vent_ok and temp_ok,
@@ -129,7 +158,7 @@ class MeteoService:
     
     @classmethod
     def _fallback_meteo(cls, lat: float, lon: float) -> Dict:
-        """Données météo de secours (si API indisponible)"""
+        """Données météo de secours"""
         return {
             "actuel": {
                 "temperature": "N/A",
@@ -146,6 +175,7 @@ class MeteoService:
                 "description": "N/A",
                 "icone": "01d",
                 "pluie": 0,
+                "vent": "N/A",
             },
             "peut_travailler": {
                 "ok": False,
@@ -153,7 +183,10 @@ class MeteoService:
                 "pluie_ok": False,
                 "vent_ok": False,
                 "temp_ok": False,
-            }
+            },
+            "ville": "Inconnu",
+            "pays": "",
+            "maj": datetime.now().isoformat(),
         }
 
 
@@ -167,7 +200,7 @@ router = APIRouter(prefix="/api/meteo", tags=["meteo"])
 
 @router.get("/chantier/{chantier_id}")
 async def get_meteo_chantier(chantier_id: int, db: Session = Depends(get_db)):
-    """Récupère la météo pour un chantier (via latitude/longitude)"""
+    """Récupère la météo pour un chantier"""
     chantier = db.get(Chantier, chantier_id)
     if not chantier:
         raise HTTPException(status_code=404, detail="Chantier introuvable")
@@ -178,10 +211,18 @@ async def get_meteo_chantier(chantier_id: int, db: Session = Depends(get_db)):
             detail="Coordonnées GPS non renseignées pour ce chantier"
         )
     
-    return await MeteoService.get_meteo(chantier.latitude, chantier.longitude)
+    return await MeteoService.get_meteo(chantier.latitude, chantier.longitude, db)
 
 
 @router.get("/coords")
-async def get_meteo_coords(lat: float, lon: float):
+async def get_meteo_coords(lat: float, lon: float, db: Session = Depends(get_db)):
     """Récupère la météo pour des coordonnées GPS"""
-    return await MeteoService.get_meteo(lat, lon)
+    return await MeteoService.get_meteo(lat, lon, db)
+
+
+@router.get("/cache/clear")
+async def clear_meteo_cache(db: Session = Depends(get_db)):
+    """Vide le cache météo (admin)"""
+    db.execute(text("DELETE FROM cache_meteo"))
+    db.commit()
+    return {"status": "Cache vidé avec succès"}
