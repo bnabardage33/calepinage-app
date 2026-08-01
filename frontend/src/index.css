@@ -183,4 +183,36 @@ h1 {
 }
 
 h1 + p {
-  color: var(--gris-tex
+  color: var(--gris-texte);
+  margin-top: 0.5rem;
+}
+
+.erreur {
+  color: var(--rouge-fonce);
+  font-weight: 600;
+}
+
+ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+li a {
+  display: block;
+  background: white;
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: #1a1a2e;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+li a:hover {
+  border-color: var(--rouge);
+}
