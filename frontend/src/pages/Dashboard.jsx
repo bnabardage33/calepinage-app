@@ -1,203 +1,123 @@
+// Dashboard.jsx — version augmentée
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getDashboardStats } from '../api/client'
+import { getChantiers, getClients } from '../api/client'
 
 export default function Dashboard() {
+  const [chantiers, setChantiers] = useState([])
+  const [clients, setClients] = useState([])
+  const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({
     totalChantiers: 0,
     enCours: 0,
     totalClients: 0,
     caTotal: 0,
-    chantiersEnCours: [],
+    devisTotal: 0,
+    facturesTotal: 0
   })
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getDashboardStats()
-      .then(setStats)
-      .catch(err => console.error('Erreur chargement dashboard:', err))
+    Promise.all([getChantiers(), getClients()])
+      .then(([c, cl]) => {
+        setChantiers(c)
+        setClients(cl)
+        
+        // Calcul stats réelles
+        const enCours = c.filter(ch => ch.statut === 'en_cours')
+        const caTotal = c.reduce((acc, ch) => acc + (ch.montant_estime || 0), 0)
+        
+        setStats({
+          totalChantiers: c.length,
+          enCours: enCours.length,
+          totalClients: cl.length,
+          caTotal: caTotal,
+          devisTotal: 0, // à venir avec endpoint /devis
+          facturesTotal: 0 // à venir avec endpoint /factures
+        })
+      })
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) {
-    return (
-      <div className="dashboard-loading">
-        <div className="spinner"></div>
-        <p>Chargement du tableau de bord...</p>
-      </div>
-    )
-  }
+  if (loading) return <div className="loading-spinner">Chargement...</div>
 
   return (
     <div className="dashboard-pro">
-      {/* HEADER */}
+      {/* En-tête */}
       <div className="dashboard-header">
-        <div>
-          <h1>Tableau de bord</h1>
-          <p className="dashboard-subtitle">
-            Vue d'ensemble de votre activité
-          </p>
-        </div>
-        <span className="badge-date">
-          📅 {new Date().toLocaleDateString('fr-FR', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-          })}
-        </span>
+        <h1>Tableau de bord</h1>
+        <span className="badge-date">{new Date().toLocaleDateString('fr-FR')}</span>
       </div>
 
-      {/* KPI CARDS */}
+      {/* KPI Cards */}
       <div className="kpi-grid">
         <div className="kpi-card">
           <div>
             <span className="kpi-number">{stats.enCours}</span>
             <span className="kpi-label">Chantiers en cours</span>
           </div>
-          <Link to="/chantiers" className="kpi-link">
-            Voir <i className="fas fa-arrow-right"></i>
-          </Link>
+          <Link to="/chantiers" className="kpi-link">Voir →</Link>
         </div>
-
         <div className="kpi-card">
           <div>
-            <span className="kpi-number">
-              {stats.caTotal.toLocaleString('fr-FR')} €
-            </span>
+            <span className="kpi-number">{stats.caTotal.toLocaleString()} €</span>
             <span className="kpi-label">Chiffre d'affaires</span>
           </div>
-          <Link to="/rapports" className="kpi-link">
-            Détail <i className="fas fa-arrow-right"></i>
-          </Link>
+          <Link to="/rapports" className="kpi-link">Détail →</Link>
         </div>
-
         <div className="kpi-card">
           <div>
-            <span className="kpi-number">8</span>
+            <span className="kpi-number">{stats.devisTotal}</span>
             <span className="kpi-label">Devis</span>
           </div>
-          <Link to="/devis" className="kpi-link">
-            Voir <i className="fas fa-arrow-right"></i>
-          </Link>
+          <Link to="/devis" className="kpi-link">Voir →</Link>
         </div>
-
         <div className="kpi-card">
           <div>
-            <span className="kpi-number">4</span>
+            <span className="kpi-number">{stats.facturesTotal}</span>
             <span className="kpi-label">Factures</span>
           </div>
-          <Link to="/factures" className="kpi-link">
-            Voir <i className="fas fa-arrow-right"></i>
-          </Link>
+          <Link to="/factures" className="kpi-link">Voir →</Link>
         </div>
       </div>
 
-      {/* 2 COLONNES */}
+      {/* 2 colonnes : chantiers + planning */}
       <div className="row-two">
-        {/* Chantiers en cours */}
         <div className="card">
           <div className="card-header">
             <h3>🚧 Chantiers en cours</h3>
             <Link to="/chantiers">Tous →</Link>
           </div>
-
-          {stats.chantiersEnCours.length === 0 ? (
-            <div className="empty-state">
-              <p>Aucun chantier en cours</p>
-              <Link to="/chantiers" className="btn-primary">
-                + Créer un chantier
-              </Link>
-            </div>
+          {chantiers.filter(c => c.statut === 'en_cours').length === 0 ? (
+            <p className="empty-state">Aucun chantier en cours</p>
           ) : (
-            stats.chantiersEnCours.map((chantier) => (
-              <div key={chantier.id} className="chantier-item">
-                <div className="chantier-info">
-                  <span className="chantier-nom">{chantier.numero_unique}</span>
-                  <span className="chantier-lieu">{chantier.adresse_chantier}</span>
-                </div>
-                <div className="chantier-right">
-                  <span className="chantier-progress">
-                    {Math.floor(Math.random() * 40 + 40)}%
-                  </span>
-                  <Link 
-                    to={`/chantiers/${chantier.id}`}
-                    className="chantier-link"
-                  >
-                    →
-                  </Link>
-                </div>
+            chantiers.filter(c => c.statut === 'en_cours').map(c => (
+              <div key={c.id} className="chantier-item">
+                <span className="chantier-nom">{c.numero_unique}</span>
+                <span className="chantier-lieu">{c.adresse_chantier}</span>
+                <span className="chantier-progress">75%</span>
               </div>
             ))
           )}
         </div>
 
-        {/* Planning */}
         <div className="card">
           <div className="card-header">
             <h3>📅 Planning de la semaine</h3>
             <Link to="/planning">Semaine →</Link>
           </div>
-
-          <div className="planning-list">
-            {[
-              { jour: 'Lun.', date: '28/07', chantier: 'Entrepôt LOGIX', horaire: '07h30 - 17h00' },
-              { jour: 'Mar.', date: '29/07', chantier: 'Bâtiment industriel ABC', horaire: '07h30 - 17h00' },
-              { jour: 'Mer.', date: '30/07', chantier: 'Entrepôt LOGIX', horaire: '07h30 - 17h00' },
-              { jour: 'Jeu.', date: '31/07', chantier: 'Maison individuelle M.', horaire: 'Pose bardage' },
-              { jour: 'Ven.', date: '01/08', chantier: 'Hanger agricole', horaire: '07h30 - 17h00' },
-            ].map((item, idx) => (
-              <div key={idx} className="planning-item">
-                <span className="planning-jour">{item.jour}</span>
-                <div className="planning-info">
-                  <span className="planning-titre">{item.chantier}</span>
-                  <span className="planning-date">{item.date}</span>
-                </div>
-                <span className="planning-horaire">{item.horaire}</span>
-              </div>
-            ))}
+          <div className="planning-placeholder">
+            <p>Les interventions de la semaine s'affichent ici</p>
+            <small>Connecte-toi à l'API planning</small>
           </div>
         </div>
       </div>
 
-      {/* RAPPELS & TÂCHES */}
-      <div className="card full-width">
-        <div className="card-header">
-          <h3>📋 Rappels & tâches</h3>
-          <Link to="/taches">Voir tout →</Link>
-        </div>
-        <div className="taches-grid">
-          <div className="tache-item urgent">
-            <span>🔴 Relancer devis D-2026-033</span>
-            <span className="tache-date">Aujourd'hui</span>
-          </div>
-          <div className="tache-item">
-            <span>📄 Envoyer facture F-2026-038</span>
-            <span className="tache-date">Demain</span>
-          </div>
-          <div className="tache-item">
-            <span>📦 Commander bavettes RAL 7016</span>
-            <span className="tache-date">31/07/2026</span>
-          </div>
-          <div className="tache-item">
-            <span>👷 Vérifier planning équipe</span>
-            <span className="tache-date">01/08/2026</span>
-          </div>
-          <div className="tache-item urgent">
-            <span>⚠️ Facture impayée - ABC CONSTRUCTION</span>
-            <span className="tache-date">03/08/2026</span>
-          </div>
-        </div>
-      </div>
-
-      {/* ACCÈS RAPIDE */}
+      {/* Accès rapide */}
       <div className="quick-access">
-        <Link to="/chantiers/nouveau">📝 Nouveau devis</Link>
-        <Link to="/factures/nouvelle">🧾 Nouvelle facture</Link>
-        <Link to="/chantiers/nouveau">🏗️ Nouveau projet</Link>
-        <Link to="/calepinage">📐 Calepinage Pro</Link>
-        <Link to="/materiaux">📦 Bibliothèque matériaux</Link>
-        <Link to="/documents">📁 Documents</Link>
+        <Link to="/chantiers/nouveau"><i className="icon">➕</i> Nouveau chantier</Link>
+        <Link to="/clients/nouveau"><i className="icon">👤</i> Nouveau client</Link>
+        <Link to="/calepinage"><i className="icon">📐</i> Calepinage Pro</Link>
+        <Link to="/materiaux"><i className="icon">📦</i> Matériaux</Link>
       </div>
     </div>
   )
