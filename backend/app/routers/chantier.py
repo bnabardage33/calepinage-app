@@ -8,10 +8,10 @@ from app.schemas.chantier import (
 )
 from app.schemas.metre import MetreCalculRequest, MetreCalculOut
 from app.services.calcul_metre import calcul_metre_facade, REGLES_BARDAGE
-
 from app.services.meteo import router as meteo_router
 
 router = APIRouter(prefix="/api", tags=["chantier"])
+router.include_router(meteo_router)
 
 
 # ---- Client ----
