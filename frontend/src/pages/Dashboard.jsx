@@ -100,29 +100,18 @@ export default function Dashboard() {
             ))
           )}
         </div>
-
-        <div className="card">
-          <div className="card-header">
-            <h3>📅 Planning de la semaine</h3>
-            <Link to="/planning">Semaine →</Link>
-          </div>
-          <div className="planning-placeholder">
-            <p>Les interventions de la semaine s'affichent ici</p>
-            <small>Connecte-toi à l'API planning</small>
-          </div>
-        </div>
       </div>
+
       <div className="card">
-  <div className="card-header">
-    <h3>🌤️ Météo du jour</h3>
-    <Link to="/meteo">Détail →</Link>
-  </div>
-  <MeteoWidget
-    lat={44.8378}  // Exemple Bordeaux
-    lon={-0.5792}
-    compact={true}
-  />
-</div>
+        <div className="card-header">
+          <h3>🌤️ Météo de la semaine</h3>
+        </div>
+        <MeteoWidget
+          lat={44.8378}  // Exemple Bordeaux
+          lon={-0.5792}
+          compact={false}
+        />
+      </div>
 
       {/* Accès rapide */}
       <div className="quick-access">
