@@ -35,18 +35,14 @@ export default function Layout({ children }) {
         >
           ☰
         </button>
-        <span className="topbar-titre">BNA BARDAGE</span>
+        <div className="topbar-logo-conteneur">
+          <img src="/logo.png" alt="BNA Bardage" className="topbar-logo-img" />
+        </div>
       </header>
 
       {ouvert && <div className="sidebar-overlay" onClick={fermer} />}
 
       <aside className={`sidebar ${ouvert ? 'ouvert' : ''}`}>
-        
-        {/* Conteneur avec fond blanc pour faire ressortir votre logo */}
-        <div className="sidebar-logo-conteneur">
-          <img src="/logo.png" alt="BNA Bardage" className="sidebar-logo-img" />
-        </div>
-
         <nav className="sidebar-nav">
           <div className="nav-liens-scroll">
             {LIENS_ACTIFS.map((lien) => (
@@ -71,7 +67,6 @@ export default function Layout({ children }) {
             ))}
           </div>
 
-          {/* Section Paramètres isolée tout en bas */}
           <div className="sidebar-footer">
             <span className="nav-desactive">
               <span className="nav-icone">⚙️</span>
@@ -87,4 +82,3 @@ export default function Layout({ children }) {
     </div>
   )
 }
-
