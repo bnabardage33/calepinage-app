@@ -47,6 +47,7 @@ class FacadeBase(BaseModel):
     type_forme: str = "rectangle"
     largeur: float
     hauteur: float
+    hauteur_pointe: Optional[float] = None
     larg_hg: Optional[float] = None
     larg_hd: Optional[float] = None
     orientation: Optional[str] = None
