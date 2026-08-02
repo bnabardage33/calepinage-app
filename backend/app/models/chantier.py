@@ -55,6 +55,7 @@ class Facade(Base):
     type_forme = Column(String, nullable=False, default="rectangle")
     largeur = Column(Float, nullable=False)
     hauteur = Column(Float, nullable=False)
+    hauteur_pointe = Column(Float)  # hauteur au faîtage, pour un pignon
     larg_hg = Column(Float)
     larg_hd = Column(Float)
     orientation = Column(String)
