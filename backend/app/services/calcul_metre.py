@@ -120,11 +120,15 @@ def calcul_metre_facade(
     hauteur: float,
     type_bardage: str,
     marge_chute_pourcentage: float = 0.0,
+    type_forme: str = "rectangle",
+    hauteur_pointe: float | None = None,
 ) -> dict:
     """
-    Calcule le métré complet d'une façade rectangle simple.
-    (Le calepinage précis panneau par panneau viendra dans un second temps —
-    Gaël a plusieurs règles selon les cas, à traiter séparément.)
+    Calcule le métré complet d'une façade.
+
+    Pour un pignon : `hauteur` = hauteur des murs (à l'égout),
+    `hauteur_pointe` = hauteur au faîtage (point le plus haut, au centre).
+    Surface = rectangle (largeur × hauteur) + triangle du dessus.
     """
     if type_bardage not in REGLES_BARDAGE:
         raise ValueError(
@@ -132,13 +136,27 @@ def calcul_metre_facade(
             f"Valeurs valides : {list(REGLES_BARDAGE)}"
         )
 
-    surface_totale = largeur * hauteur
+    if type_forme == "pignon":
+        if not hauteur_pointe or hauteur_pointe <= hauteur:
+            raise ValueError(
+                "Pour un pignon, la hauteur au faîtage (pointe) doit être renseignée "
+                "et supérieure à la hauteur des murs."
+            )
+        surface_totale = largeur * hauteur + largeur * (hauteur_pointe - hauteur) / 2
+        # Pour les équerres, on prend la hauteur au faîtage (chevron central,
+        # le plus long) : légère surestimation sur les chevrons de bord, mais
+        # ça évite un manque de matériel sur le chantier.
+        hauteur_equerres = hauteur_pointe
+    else:
+        surface_totale = largeur * hauteur
+        hauteur_equerres = hauteur
+
     surface_avec_marge = surface_totale * (1 + marge_chute_pourcentage / 100)
 
     visserie = calcul_visserie(surface_avec_marge, type_bardage)
     lisses = calcul_lisses_rails(surface_avec_marge, type_bardage)
     rails = calcul_lisses_rails(surface_avec_marge, type_bardage)  # même règle
-    equerres = calcul_equerres(largeur, hauteur, type_bardage)
+    equerres = calcul_equerres(largeur, hauteur_equerres, type_bardage)
 
     return {
         "type_bardage": type_bardage,
