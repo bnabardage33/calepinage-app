@@ -1,6 +1,7 @@
 import os
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 from app.database import Base, engine
 from app import models
 from app.routers import chantier
@@ -27,6 +28,15 @@ app.add_middleware(
 # Création automatique des tables (en dev uniquement)
 # En prod, utiliser Alembic pour les migrations
 Base.metadata.create_all(bind=engine)
+
+# Mini-migration : create_all() ne modifie pas les tables déjà existantes,
+# donc on ajoute ici les colonnes ajoutées après la création initiale.
+with engine.connect() as conn:
+    try:
+        conn.execute(text("ALTER TABLE facade ADD COLUMN IF NOT EXISTS hauteur_pointe FLOAT"))
+        conn.commit()
+    except Exception as e:
+        print(f"⚠️ Migration hauteur_pointe ignorée : {e}")
 
 # Routers
 app.include_router(chantier.router)
