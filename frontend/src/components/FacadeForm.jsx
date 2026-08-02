@@ -16,6 +16,7 @@ const FORME_INITIALE = {
   type_forme: 'rectangle',
   largeur: '',
   hauteur: '',
+  hauteur_pointe: '',
   orientation: '',
   type_bardage: 'composite',
 }
@@ -43,6 +44,10 @@ export default function FacadeForm({ chantierId, onFacadeCreated }) {
         type_forme: form.type_forme,
         largeur: parseFloat(form.largeur),
         hauteur: parseFloat(form.hauteur),
+        hauteur_pointe:
+          form.type_forme === 'pignon' && form.hauteur_pointe
+            ? parseFloat(form.hauteur_pointe)
+            : null,
         orientation: form.orientation || null,
         type_bardage: form.type_bardage,
       })
@@ -102,6 +107,19 @@ export default function FacadeForm({ chantierId, onFacadeCreated }) {
             required
           />
         </label>
+
+        {form.type_forme === 'pignon' && (
+          <label>
+            Hauteur au faîtage — pointe centrale (m)
+            <input
+              type="number"
+              step="0.01"
+              value={form.hauteur_pointe}
+              onChange={majChamp('hauteur_pointe')}
+              required
+            />
+          </label>
+        )}
 
         <label>
           Orientation
