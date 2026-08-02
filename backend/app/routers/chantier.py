@@ -105,8 +105,8 @@ def calculer_metre(
             hauteur=facade.hauteur,
             type_bardage=facade.type_bardage,
             marge_chute_pourcentage=payload.marge_chute_pourcentage,
+            type_forme=facade.type_forme,
+            hauteur_pointe=facade.hauteur_pointe,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-      
-        app.include_router(meteo_router)
